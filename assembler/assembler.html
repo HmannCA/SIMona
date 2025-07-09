@@ -4,62 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SimONA Prompt Assembler</title>
-    <link rel="stylesheet" href="assembler.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="url"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .copy-button {
+            background-color: #27ae60;
+            padding: 5px 15px;
+        }
+        .copy-button:hover {
+            background-color: #229954;
+        }
+        .step-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .prompt-output-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #1976d2;
+        }
+        .sql-button {
+            background-color: #e74c3c;
+        }
+        .sql-button:hover {
+            background-color: #c0392b;
+        }
+        #simulationsEinheitIDDisplay {
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #ecf0f1;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .suggestion-item {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .suggestion-item input {
+            margin: 0 5px;
+            padding: 4px;
+        }
+        #status-banner {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        #validation-report-area {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        #validation-report-area.error {
+            background-color: #ffebee;
+            border: 1px solid #ef5350;
+            color: #c62828;
+        }
+        #validation-report-area.success {
+            background-color: #e8f5e9;
+            border: 1px solid #66bb6a;
+            color: #2e7d32;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>SimONA Prompt Assembler</h1>
-
+        <h1>SimONA Prompt Assembler v2.4</h1>
+        
         <div id="status-banner"></div>
-
+        
         <div id="step-0" class="step-section">
-            <h3>Schritt 0: Basisinformationen zur Normeinheit</h3>
-            <label for="gesetz">Gesetz/Verordnung (Abkürzung):</label>
-            <input type="text" id="gesetz" value="" placeholder="JuSchG">
-            <label for="paragraph">Paragraph (z.B. "4"):</label>
-            <input type="text" id="paragraph" value="" placeholder="4">
-            <label for="absatz">Absatz (z.B. "3"):</label>
-            <input type="text" id="absatz" value="" placeholder="3">
-            <label for="satz">Satz (z.B. "1-2", leer lassen wenn nicht zutreffend):</label>
-            <input type="text" id="satz" value="">
-            <label for="analyseVariante">Analyse-Varianten-Kennung:</label>
-            <input type="text" id="analyseVariante" value="GeminiPro_v1" placeholder="Eindeutige Kennung, z.B. GeminiPro_v1">
-            <label for="quelleUrl">Quelle-URL:</label>
-            <input type="text" id="quelleUrl" value="" placeholder="https://www.gesetze-im-internet.de/juschg/__4.html">
-            <label for="normtext">Exakter Wortlaut des zu analysierenden Normteils (oder des gesamten Paragraphen):</label>
-            <textarea id="normtext" placeholder="(3) Abweichend von Absatz 1 darf Kindern und Jugendlichen der Aufenthalt in Gaststätten, die als Nachtbar oder Nachtclub geführt werden, und in vergleichbaren Vergnügungsbetrieben nicht gestattet werden."></textarea>
-            <div>
-              <button onclick="generateSimulationsEinheitID()">SimulationsEinheit_ID generieren</button>
-              <button onclick="clearAllTextareasAndSuggestions()" style="margin-left: 10px; background-color: #e74c3c;">Analyse zurücksetzen</button> 
+            <h2>Schritt 0: Grunddaten eingeben</h2>
+            <div class="input-group">
+                <label for="gesetz">Gesetz/Verordnung (Abkürzung):</label>
+                <input type="text" id="gesetz" placeholder="z.B. AufenthG, AsylG, StGB">
             </div>
-            <div class="id-display">Generierte SimulationsEinheit_ID: <span id="simulationsEinheitIDDisplay"></span></div>
+            <div class="input-group">
+                <label for="paragraph">Paragraph (nur Zahl):</label>
+                <input type="text" id="paragraph" placeholder="z.B. 32">
+            </div>
+            <div class="input-group">
+                <label for="absatz">Absatz (optional, nur Zahl):</label>
+                <input type="text" id="absatz" placeholder="z.B. 4">
+            </div>
+            <div class="input-group">
+                <label for="satz">Satz (optional, nur Zahl):</label>
+                <input type="text" id="satz" placeholder="z.B. 2">
+            </div>
+            <div class="input-group">
+                <label for="analyseVariante">Analyse-Variante (für alternative Interpretationen):</label>
+                <input type="text" id="analyseVariante" placeholder="z.B. Restriktiv, Liberal, Standard">
+            </div>
+            <div class="input-group">
+                <label for="quelle">Quelle/URL (optional):</label>
+                <input type="url" id="quelle" placeholder="https://www.gesetze-im-internet.de/...">
+            </div>
+            <button onclick="generateSimulationsEinheitID()">SimulationsEinheit_ID generieren</button>
+            <p>Generierte ID: <span id="simulationsEinheitIDDisplay">Noch nicht generiert</span></p>
         </div>
 
-        <div id="step-0-5" class="step-section">
-            <h3>Schritt 0.5: Paragraphen-Analyse (Optional)</h3>
-            <p class="info">Wenn Sie im Feld oben den gesamten Text eines Paragraphen (inkl. Überschriften) eingefügt haben, klicken Sie hier, um ihn automatisch in seine Metadaten und Absätze zu zerlegen.</p>
-            <button onclick="showPrompt('SimONA_P0_5_ParagraphAnalyse')">Paragraphen aufteilen & analysieren</button>
+        <div id="step-0-5" class="step-section" style="display: none;">
+            <h2>Schritt 0.5: Mehrere Absätze analysieren (SimONA_P0.5)</h2>
+            <p class="info">Verwenden Sie diesen Schritt, wenn Sie einen ganzen Paragraphen mit mehreren Absätzen analysieren möchten.</p>
+            <div class="input-group">
+                <label for="vollstaendigerParagraphentext">Vollständiger Paragraphentext (inkl. Überschriften):</label>
+                <textarea id="vollstaendigerParagraphentext" placeholder="Fügen Sie hier den kompletten Paragraphen mit allen Absätzen ein..."></textarea>
+            </div>
+            <button onclick="showPrompt('SimONA_P0_5_ParagraphAnalyse')">Generiere Prompt für Paragraphen-Analyse</button>
             <div id="SimONA_P0_5_ParagraphAnalyse_output_area" class="prompt-output-area" style="display:none;">
                 <label for="SimONA_P0_5_ParagraphAnalyse_prompt">Generierter Prompt:</label>
                 <button class="copy-button" onclick="copyToClipboard('SimONA_P0_5_ParagraphAnalyse_prompt', this)">Kopieren</button>
                 <textarea id="SimONA_P0_5_ParagraphAnalyse_prompt" readonly></textarea>
                 <label for="SimONA_P0_5_ParagraphAnalyse_response">KI-Antwort (JSON):</label>
-                <textarea id="SimONA_P0_5_ParagraphAnalyse_response" placeholder="JSON-Antwort der KI für die Paragraphen-Analyse hier einfügen..."></textarea>
+                <textarea id="SimONA_P0_5_ParagraphAnalyse_response" placeholder="JSON-Antwort der KI hier einfügen..."></textarea>
             </div>
-            <div id="absatz-selection-area" style="margin-top: 15px;"></div>
         </div>
 
         <div id="step-1" class="step-section">
-            <h3>Schritt 1: SimONA_Priming_Systemanweisung (Prompt 0)</h3>
-            <p class="info">Dies ist der globale Priming-Prompt, der einmalig zu Beginn einer KI-Sitzung verwendet werden sollte.</p>
-            <button onclick="showPrompt('SimONA_Priming_Systemanweisung')">Zeige Priming Prompt</button>
-            <div id="SimONA_Priming_Systemanweisung_output_area" class="prompt-output-area" style="display:none;">
-                <label for="SimONA_Priming_Systemanweisung_prompt">Generierter Prompt:</label>
-                <button class="copy-button" onclick="copyToClipboard('SimONA_Priming_Systemanweisung_prompt', this)">Kopieren</button>
-                <textarea id="SimONA_Priming_Systemanweisung_prompt" readonly></textarea>
+            <h2>Schritt 1: Normtext eingeben</h2>
+            <div class="input-group">
+                <label for="normtext">Exakter Wortlaut des zu analysierenden Normteils:</label>
+                <textarea id="normtext" placeholder="Fügen Sie hier den exakten Gesetzestext ein..."></textarea>
             </div>
         </div>
-        
+
         <div id="step-2" class="step-section">
             <h3>Schritt 2: SimONA_P1_EinheitMetadaten</h3>
             <button onclick="showPrompt('SimONA_P1_EinheitMetadaten')">Generiere Prompt für EinheitMetadaten</button>
@@ -81,6 +229,7 @@
                 <textarea id="SimONA_P2_ParameterExtraktion_prompt" readonly></textarea>
                 <label for="SimONA_P2_ParameterExtraktion_response">KI-Antwort (JSON-Array):</label>
                 <textarea id="SimONA_P2_ParameterExtraktion_response" placeholder="JSON-Array der Parameter-Objekte hier einfügen..."></textarea>
+                <button onclick="debugP2Data()" style="background-color: #95a5a6;">Debug P2-Daten (Console)</button>
             </div>
         </div>
 
@@ -93,22 +242,23 @@
                 <button class="copy-button" onclick="copyToClipboard('SimONA_P2_7_ParameterKonklusionDetail_prompt', this)">Kopieren</button>
                 <textarea id="SimONA_P2_7_ParameterKonklusionDetail_prompt" readonly></textarea>
                 <label for="SimONA_P2_7_ParameterKonklusionDetail_response">KI-Antwort (JSON-Array):</label>
-                <textarea id="SimONA_P2_7_ParameterKonklusionDetail_response" placeholder="JSON-Array der Konklusions-Objekte hier einfügen..."></textarea>
-                <button onclick="mergeP2_7Data()">P2.7-Daten mit P2-Parametern verbinden</button> 
+                <textarea id="SimONA_P2_7_ParameterKonklusionDetail_response" placeholder="JSON-Array der Konklusionsdetails hier einfügen..."></textarea>
+                <button onclick="mergeP2_7Data()" style="background-color: #9b59b6;">P2.7-Daten in P2-Parameter integrieren</button>
             </div>
         </div>
-        
+
         <div id="step-4" class="step-section">
             <h3>Schritt 4: SimONA_P2.5_ErgebnisProfilVorschlaege</h3>
-            <button onclick="showPrompt('SimONA_P2_5_ErgebnisProfilVorschlaege')">Generiere Prompt für ErgebnisProfilVorschläge</button>
+            <p class="info">Generiert Vorschläge für mögliche Ergebnisprofile basierend auf P1 und P2 Daten.</p>
+            <button onclick="showPrompt('SimONA_P2_5_ErgebnisProfilVorschlaege')">Generiere Prompt für ErgebnisProfil-Vorschläge</button>
             <div id="SimONA_P2_5_ErgebnisProfilVorschlaege_output_area" class="prompt-output-area" style="display:none;">
                 <label for="SimONA_P2_5_ErgebnisProfilVorschlaege_prompt">Generierter Prompt:</label>
                 <button class="copy-button" onclick="copyToClipboard('SimONA_P2_5_ErgebnisProfilVorschlaege_prompt', this)">Kopieren</button>
                 <textarea id="SimONA_P2_5_ErgebnisProfilVorschlaege_prompt" readonly></textarea>
-                <label for="SimONA_P2_5_ErgebnisProfilVorschlaege_response">KI-Antwort (JSON-Array der Vorschläge):</label>
+                <label for="SimONA_P2_5_ErgebnisProfilVorschlaege_response">KI-Antwort (JSON-Array):</label>
                 <textarea id="SimONA_P2_5_ErgebnisProfilVorschlaege_response" placeholder="JSON-Array der ErgebnisProfil-Vorschläge hier einfügen..."></textarea>
-                <button onclick="displayAndPrepareP2_5Suggestions()">KI-Vorschläge anzeigen & bearbeiten</button>
-                <div id="p2_5_suggestions_editor_area" style="margin-top: 15px;"></div>
+                <button onclick="displayAndPrepareP2_5Suggestions()" style="background-color: #f39c12;">Anzeigen & Bearbeiten</button>
+                <div id="p2_5_suggestions_editor_area" style="margin-top: 20px;"></div>
                 <button id="addNewSuggestionButton" onclick="addNewSuggestionInterface()" style="margin-top: 15px; background-color: #1abc9c; display:none;">Neuen ErgebnisProfil-Vorschlag hinzufügen</button>
                 <div id="p2_5_add_new_suggestion_area" style="margin-top: 10px; display:none;">
                     <h4>Neuen Vorschlag erstellen:</h4>
@@ -136,9 +286,9 @@
 
         <div id="step-6" class="step-section">
             <h3>Schritt 6: SimONA_P4_ErgebnisProfilDetails</h3>
-             <p class="info">Dieser Prompt verwendet die in P3 von der KI erstellten Regeln (oder die validierten Vorschläge aus P2.5), um die Liste der zu definierenden Ergebnisprofile zu bestimmen.</p>
+            <p class="info">Dieser Prompt verwendet die in P3 von der KI erstellten Regeln (oder die validierten Vorschläge aus P2.5), um die Liste der zu definierenden Ergebnisprofile zu bestimmen.</p>
             <button onclick="showPrompt('SimONA_P4_ErgebnisProfilDetails')">Generiere Prompt für ErgebnisProfilDetails</button>
-            <div id="SimONA_P4_ErgebnisProfilVorschlaege_output_area" class="prompt-output-area" style="display:none;">
+            <div id="SimONA_P4_ErgebnisProfilDetails_output_area" class="prompt-output-area" style="display:none;">
                 <label for="SimONA_P4_ErgebnisProfilDetails_prompt">Generierter Prompt:</label>
                 <button class="copy-button" onclick="copyToClipboard('SimONA_P4_ErgebnisProfilDetails_prompt', this)">Kopieren</button>
                 <textarea id="SimONA_P4_ErgebnisProfilDetails_prompt" readonly></textarea>
