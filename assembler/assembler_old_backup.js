@@ -224,93 +224,265 @@ function showPrompt(promptName) {
     }
 }
 
-// Event Listeners für Response-Felder
-document.getElementById('SimONA_P1_EinheitMetadaten_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            p1ResponseData = null; 
-            console.log("P1 Response Data gelöscht."); 
-            return; 
-        }
-        p1ResponseData = JSON.parse(this.value);
-        console.log("P1 Response Data (Objekt) gespeichert:", p1ResponseData);
-    } catch(e) {
-        p1ResponseData = null;
-        if(this.value.trim() !== "") alert("P1 Antwort ist kein valides JSON.");
-    }
-});
+// event-listeners.js - Alle Event-Listener für SimONA mit State-System
+// Version: 2.5
 
-document.getElementById('SimONA_P2_ParameterExtraktion_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            p2ResponseData = null; 
-            console.log("P2 Response Data gelöscht."); 
-            return; 
-        }
-        p2ResponseData = JSON.parse(this.value);
-        console.log("P2 Response Data (Array) gespeichert:", p2ResponseData);
-    } catch(e) {
-        p2ResponseData = null;
-        if(this.value.trim() !== "") alert("P2 Antwort ist kein valides JSON-Array.");
+/**
+ * Initialisiert alle Event-Listener für Response-Textareas
+ */
+function initializeResponseListeners() {
+    
+    // P0.5 - Paragraphen-Analyse Response
+    const p0_5ResponseTextarea = document.getElementById('SimONA_P0_5_ParagraphAnalyse_response');
+    if (p0_5ResponseTextarea) {
+        p0_5ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p0_5', null);
+                    document.getElementById('absatz-selection-area').innerHTML = '';
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                SimONAState.methods.setResponse('p0_5', data);
+                console.log("P0.5 Response Data (Paragraphen-Analyse) gespeichert");
+                
+                // Trigger Absatz-Auswahl UI
+                renderAbsatzSelection();
+            } catch(e) {
+                SimONAState.methods.setResponse('p0_5', null);
+                document.getElementById('absatz-selection-area').innerHTML = 
+                    '<p style="color:red;">Fehler: Die eingefügte P0.5-Antwort ist kein valides JSON-Objekt.</p>';
+                if(this.value.trim() !== "") {
+                    alert("P0.5 Antwort ist kein valides JSON-Objekt: " + e.message);
+                }
+            }
+        });
     }
-});
+    
+    // P1 - EinheitMetadaten Response
+    const p1ResponseTextarea = document.getElementById('SimONA_P1_EinheitMetadaten_response');
+    if (p1ResponseTextarea) {
+        p1ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p1', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                SimONAState.methods.setResponse('p1', data);
+                console.log("P1 Response Data (EinheitMetadaten) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p1', null);
+                if(this.value.trim() !== "") {
+                    alert("P1 Antwort ist kein valides JSON: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P2 - ParameterExtraktion Response
+    const p2ResponseTextarea = document.getElementById('SimONA_P2_ParameterExtraktion_response');
+    if (p2ResponseTextarea) {
+        p2ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p2', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                if (!Array.isArray(data)) {
+                    throw new Error("P2 Response muss ein Array sein");
+                }
+                SimONAState.methods.setResponse('p2', data);
+                console.log("P2 Response Data (Parameter) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p2', null);
+                if(this.value.trim() !== "") {
+                    alert("P2 Antwort ist kein valides JSON-Array: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P2.5 - ErgebnisProfilVorschläge Response
+    const p2_5ResponseTextarea = document.getElementById('SimONA_P2_5_ErgebnisProfilVorschlaege_response');
+    if (p2_5ResponseTextarea) {
+        p2_5ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    console.log("P2.5 Response Textarea geleert");
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                if (!Array.isArray(data)) {
+                    throw new Error("P2.5 Response muss ein Array sein");
+                }
+                console.log("P2.5 Response Textarea enthält valides JSON (für 'Anzeigen & Bearbeiten')");
+                // Hinweis: P2.5 wird NICHT automatisch im State gespeichert,
+                // sondern erst nach Validierung durch den Nutzer
+            } catch(e) {
+                if(this.value.trim() !== "") {
+                    alert("P2.5 Antwort ist kein valides JSON-Array: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P2.7 - ParameterKonklusionDetail Response
+    const p2_7ResponseTextarea = document.getElementById('SimONA_P2_7_ParameterKonklusionDetail_response');
+    if (p2_7ResponseTextarea) {
+        p2_7ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p2_7', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                if (!Array.isArray(data)) {
+                    throw new Error("P2.7 Response muss ein Array sein");
+                }
+                SimONAState.methods.setResponse('p2_7', data);
+                console.log("P2.7 Response Data (Konklusionsdetails) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p2_7', null);
+                if(this.value.trim() !== "") {
+                    alert("P2.7 Antwort ist kein valides JSON-Array: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P3 - RegelGenerierung Response
+    const p3ResponseTextarea = document.getElementById('SimONA_P3_RegelGenerierung_response');
+    if (p3ResponseTextarea) {
+        p3ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p3', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                if (!Array.isArray(data)) {
+                    throw new Error("P3 Response muss ein Array sein");
+                }
+                SimONAState.methods.setResponse('p3', data);
+                console.log("P3 Response Data (Regeln) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p3', null);
+                if(this.value.trim() !== "") {
+                    alert("P3 Antwort ist kein valides JSON-Array: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P4 - ErgebnisProfilDetails Response
+    const p4ResponseTextarea = document.getElementById('SimONA_P4_ErgebnisProfilDetails_response');
+    if (p4ResponseTextarea) {
+        p4ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p4', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                if (!Array.isArray(data)) {
+                    throw new Error("P4 Response muss ein Array sein");
+                }
+                SimONAState.methods.setResponse('p4', data);
+                console.log("P4 Response Data (ErgebnisProfile) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p4', null);
+                if(this.value.trim() !== "") {
+                    alert("P4 Antwort ist kein valides JSON-Array: " + e.message);
+                }
+            }
+        });
+    }
+    
+    // P5 - QualitätsAudit Response
+    const p5ResponseTextarea = document.getElementById('SimONA_P5_QualitaetsAudit_response');
+    if (p5ResponseTextarea) {
+        p5ResponseTextarea.addEventListener('blur', function() {
+            try {
+                if (this.value.trim() === "") { 
+                    SimONAState.methods.setResponse('p5', null);
+                    return; 
+                }
+                const data = JSON.parse(this.value);
+                SimONAState.methods.setResponse('p5', data);
+                console.log("P5 Response Data (QualitätsAudit) gespeichert");
+            } catch(e) {
+                SimONAState.methods.setResponse('p5', null);
+                if(this.value.trim() !== "") {
+                    alert("P5 Antwort ist kein valides JSON: " + e.message);
+                }
+            }
+        });
+    }
+    
+    console.log("Alle Response-Event-Listener initialisiert");
+}
 
-document.getElementById('SimONA_P2_5_ErgebnisProfilVorschlaege_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            console.log("P2.5 Response Textarea geleert."); 
-            return; 
+/**
+ * Listener für State-Änderungen (für andere Module)
+ */
+function initializeStateChangeListener() {
+    document.addEventListener('simonaStateChange', function(event) {
+        const { type, data } = event.detail;
+        console.log(`State-Änderung: ${type}`, data);
+        
+        // Hier können andere Module auf State-Änderungen reagieren
+        switch(type) {
+            case 'p1':
+                // P1-Daten wurden gesetzt
+                enableDependentButtons(['p2', 'p2_5', 'p2_7']);
+                break;
+            case 'p2':
+                // P2-Daten wurden gesetzt
+                enableDependentButtons(['p2_5', 'p2_7', 'p3']);
+                break;
+            case 'p2_5':
+                // P2.5 validierte Daten wurden gesetzt
+                enableDependentButtons(['p3']);
+                break;
+            case 'p3':
+                // P3-Daten wurden gesetzt
+                enableDependentButtons(['p4']);
+                break;
+            case 'p4':
+                // P4-Daten wurden gesetzt
+                enableDependentButtons(['p5', 'sql']);
+                break;
         }
-        JSON.parse(this.value); 
-        console.log("P2.5 Response Textarea enthält valides JSON (wird für 'Anzeigen & Bearbeiten' genutzt).");
-    } catch(e) {
-        if(this.value.trim() !== "") alert("P2.5 Antwort ist kein valides JSON-Array.");
-    }
-});
+    });
+}
 
-document.getElementById('SimONA_P2_7_ParameterKonklusionDetail_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            p2_7ResponseData = null; 
-            console.log("P2.7 Response Data gelöscht."); 
-            return; 
+/**
+ * Hilfsfunktion: Aktiviert Buttons basierend auf verfügbaren Daten
+ */
+function enableDependentButtons(stepIds) {
+    stepIds.forEach(stepId => {
+        if (SimONAState.methods.validateDataForStep(stepId)) {
+            // Button aktivieren (Beispiel-Implementation)
+            const button = document.querySelector(`button[data-step="${stepId}"]`);
+            if (button) {
+                button.disabled = false;
+                button.style.opacity = '1';
+            }
         }
-        p2_7ResponseData = JSON.parse(this.value);
-        console.log("P2.7 Response Data (Array) gespeichert:", p2_7ResponseData);
-    } catch(e) {
-        p2_7ResponseData = null;
-        if(this.value.trim() !== "") alert("P2.7 Antwort ist kein valides JSON-Array.");
-    }
-});
+    });
+}
 
-document.getElementById('SimONA_P3_RegelGenerierung_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            p3ResponseData = null; 
-            console.log("P3 Response Data gelöscht."); 
-            return; 
-        }
-        p3ResponseData = JSON.parse(this.value);
-        console.log("P3 Response Data (Array) gespeichert:", p3ResponseData);
-    } catch(e) {
-        p3ResponseData = null;
-        if(this.value.trim() !== "") alert("P3 Antwort ist kein valides JSON-Array.");
-    }
-});
-
-document.getElementById('SimONA_P4_ErgebnisProfilDetails_response').addEventListener('blur', function() {
-    try {
-        if (this.value.trim() === "") { 
-            p4ResponseData = null; 
-            console.log("P4 Response Data gelöscht."); 
-            return; 
-        }
-        p4ResponseData = JSON.parse(this.value); 
-        console.log("P4 Response Data (Array) gespeichert:", p4ResponseData);
-    } catch(e) {
-        p4ResponseData = null;
-        if(this.value.trim() !== "") alert("P4 Antwort ist kein valides JSON-Array.");
-    }
+/**
+ * Hauptinitialisierung beim Laden der Seite
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    initializeResponseListeners();
+    initializeStateChangeListener();
+    
+    // Weitere Event-Listener können hier hinzugefügt werden
+    console.log("SimONA Event-System initialisiert");
 });
 
 // P2.5 Editor Funktionen
@@ -525,39 +697,81 @@ function generateSqlForP2Data() {
     sql += `START TRANSACTION;\n\n`;
     
     p2ResponseData.forEach(param => {
-        // Flexibles Mapping für verschiedene mögliche Feldnamen
-        const parameterName = param.Parameter_Name || param.Name || param.Parametername || 'Unbenannt';
-        const fragetext = param.Fragetext || param.Frage || param.Question || '';
-        const parameterTyp = param.Parameter_Typ || param.Typ || param.Type || 'JaNein';
-        const istPflicht = param.Ist_Pflichtparameter !== undefined ? param.Ist_Pflichtparameter : true;
-        const istGrundvoraussetzung = param.Ist_Grundvoraussetzung !== undefined ? param.Ist_Grundvoraussetzung : false;
+        // Validierung der Pflichtfelder
+        if (!param || typeof param.Parameter_ID !== 'string' || typeof param.Fragetext !== 'string') {
+            console.warn("Ungültiges Parameter-Objekt übersprungen:", param);
+            return;
+        }
         
-        // Parameter einfügen
-        sql += `INSERT INTO Parameter (Parameter_ID, FK_Einheit_ID, Parameter_Name, Fragetext, Hilfetext, `;
-        sql += `Parameter_Typ, Ist_Pflichtparameter, Ist_Grundvoraussetzung, Reihenfolge_Anzeige) VALUES (\n`;
+        // Parameter einfügen - ALLE 14 Spalten aus der Datenbank
+        sql += `INSERT INTO Parameter (`;
+        sql += `Parameter_ID, FK_Einheit_ID, Reihenfolge_Anzeige, Fragetext, Antworttyp, `;
+        sql += `Begleittext, Normbezug_Detail_Parameter, Verweis_Normen_Info_Parameter, `;
+        sql += `FK_Verlinkte_SimulationsEinheit_ID, IstGrundvoraussetzung, AnzeigeBedingungJSON, `;
+        sql += `KonklusiveAntwortenInfoJSON, Text_Erfuellt_Pro, Text_NichtErfuellt_Contra`;
+        sql += `) VALUES (\n`;
+        
+        // 1. Parameter_ID
         sql += `  ${escapeSqlString(param.Parameter_ID)},\n`;
+        
+        // 2. FK_Einheit_ID
         sql += `  ${escapeSqlString(currentSimulationsEinheitID)},\n`;
-        sql += `  ${escapeSqlString(parameterName)},\n`;
-        sql += `  ${escapeSqlString(fragetext)},\n`;
-        sql += `  ${param.Hilfetext ? escapeSqlString(param.Hilfetext) : 'NULL'},\n`;
-        sql += `  ${escapeSqlString(parameterTyp)},\n`;
-        sql += `  ${istPflicht ? 'TRUE' : 'FALSE'},\n`;
-        sql += `  ${istGrundvoraussetzung ? 'TRUE' : 'FALSE'},\n`;
-        sql += `  ${param.Reihenfolge_Anzeige || 'NULL'}\n`;
+        
+        // 3. Reihenfolge_Anzeige
+        sql += `  ${param.Reihenfolge_Anzeige !== undefined && param.Reihenfolge_Anzeige !== null ? parseInt(param.Reihenfolge_Anzeige, 10) : 'NULL'},\n`;
+        
+        // 4. Fragetext
+        sql += `  ${escapeSqlString(param.Fragetext)},\n`;
+        
+        // 5. Antworttyp
+        sql += `  ${escapeSqlString(param.Antworttyp)},\n`;
+        
+        // 6. Begleittext
+        sql += `  ${param.Begleittext ? escapeSqlString(param.Begleittext) : 'NULL'},\n`;
+        
+        // 7. Normbezug_Detail_Parameter
+        sql += `  ${param.Normbezug_Detail_Parameter ? escapeSqlString(param.Normbezug_Detail_Parameter) : 'NULL'},\n`;
+        
+        // 8. Verweis_Normen_Info_Parameter
+        sql += `  ${param.Verweis_Normen_Info_Parameter ? escapeSqlString(param.Verweis_Normen_Info_Parameter) : 'NULL'},\n`;
+        
+        // 9. FK_Verlinkte_SimulationsEinheit_ID
+        sql += `  ${param.FK_Verlinkte_SimulationsEinheit_ID_Platzhalter ? escapeSqlString(param.FK_Verlinkte_SimulationsEinheit_ID_Platzhalter) : 'NULL'},\n`;
+        
+        // 10. IstGrundvoraussetzung
+        sql += `  ${param.Ist_Grundvoraussetzung === true ? 'TRUE' : 'FALSE'},\n`;
+        
+        // 11. AnzeigeBedingungJSON
+        sql += `  ${(param.Anzeige_Bedingung && Array.isArray(param.Anzeige_Bedingung) && param.Anzeige_Bedingung.length > 0) ? escapeSqlString(JSON.stringify(param.Anzeige_Bedingung)) : 'NULL'},\n`;
+        
+        // 12. KonklusiveAntwortenInfoJSON (kommt aus P2.7, falls vorhanden)
+        sql += `  ${(param.Konklusive_Antworten_Info && Array.isArray(param.Konklusive_Antworten_Info) && param.Konklusive_Antworten_Info.length > 0) ? escapeSqlString(JSON.stringify(param.Konklusive_Antworten_Info)) : 'NULL'},\n`;
+        
+        // 13. Text_Erfuellt_Pro
+        sql += `  ${param.Text_Erfuellt_Pro ? escapeSqlString(param.Text_Erfuellt_Pro) : 'NULL'},\n`;
+        
+        // 14. Text_NichtErfuellt_Contra
+        sql += `  ${param.Text_NichtErfuellt_Contra ? escapeSqlString(param.Text_NichtErfuellt_Contra) : 'NULL'}\n`;
+        
         sql += `);\n\n`;
         
-        // Optionen einfügen (falls vorhanden)
-        if (param.Optionen && Array.isArray(param.Optionen)) {
-            param.Optionen.forEach(option => {
+        // ParameterOptionen einfügen (falls vorhanden)
+        if (param.Antworttyp === 'AuswahlEinfach' && param.Antwortoptionen_bei_Auswahl && Array.isArray(param.Antwortoptionen_bei_Auswahl)) {
+            param.Antwortoptionen_bei_Auswahl.forEach(option => {
+                if (!option || typeof option.Option_Text !== 'string' || typeof option.Option_Wert_Intern !== 'string') {
+                    console.warn("Ungültiges Antwortoptions-Objekt übersprungen:", option, "für Parameter_ID:", param.Parameter_ID);
+                    return;
+                }
+                
                 sql += `INSERT INTO ParameterOptionen (FK_Parameter_ID, Option_Wert_Intern, Option_Anzeigetext, Reihenfolge_Option) VALUES (\n`;
                 sql += `  ${escapeSqlString(param.Parameter_ID)},\n`;
                 sql += `  ${escapeSqlString(option.Option_Wert_Intern)},\n`;
-                sql += `  ${escapeSqlString(option.Option_Anzeigetext)},\n`;
-                sql += `  ${option.Reihenfolge_Option !== undefined ? parseInt(option.Reihenfolge_Option, 10) : 'NULL'}\n`;
+                sql += `  ${escapeSqlString(option.Option_Text)},\n`;
+                sql += `  ${option.Reihenfolge_Option !== undefined && option.Reihenfolge_Option !== null ? parseInt(option.Reihenfolge_Option, 10) : 'NULL'}\n`;
                 sql += `);\n`;
             });
+            sql += `\n`;
         }
-        sql += `\n`;
     });
     
     sql += `COMMIT;\n`;
