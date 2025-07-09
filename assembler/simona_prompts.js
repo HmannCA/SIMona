@@ -1,0 +1,331 @@
+// simona_prompts.js
+// Enthält alle Prompt-Vorlagen für den SimONA Assembler
+  
+const promptTemplates = {
+    SimONA_Priming_Systemanweisung: `Du bist eine hochspezialisierte KI zur präzisen Analyse deutscher Rechtsnormen für das SimONA-System. Deine Aufgabe ist es, für alle spezifischen Analyse-Prompts (wie SimONA_P1_EinheitMetadaten, SimONA_P2_ParameterExtraktion, etc.), die dir nach dieser Systemanweisung folgen, die angeforderten Informationen ausschließlich aus dem dir primär übergebenen Gesetzestext-Auszug zu extrahieren und als reinen JSON-String zurückzugeben.
+
+WICHTIGSTE ANWEISUNG FÜR ALLE DEINE ANTWORTEN AUF NACHFOLGENDE ANALYSE-PROMPTS:
+Deine GESAMTE Antwort auf Analyse-Prompts muss IMMER und AUSSCHLIESSLICH ein einzelnes, valides JSON-Objekt oder JSON-Array sein, genau wie im jeweiligen Analyse-Prompt spezifiziert.
+Es dürfen ABSOLUT KEINERLEI andere Texte, Zeichen, Einleitungsfloskeln (wie z.B. "Hier ist das angeforderte JSON:", "Gerne, hier ist die Analyse:", "json" oder ähnliches), Kommentare, Erklärungen, Zusammenfassungen, Entschuldigungen oder sonstige Höflichkeitsfloskeln VOR oder NACH dem JSON-String enthalten sein. Die Antwort MUSS direkt mit einer öffnenden geschweiften Klammer \`{\` (für JSON-Objekte) oder einer öffnenden eckigen Klammer \`[\` (für JSON-Arrays) beginnen und entsprechend mit einer schließenden Klammer \`}\` oder \`]\` enden. Es darf auch keine abschließenden Bemerkungen oder Formatierungen wie Code-//Block-Markierungen geben. Nur der reine JSON-Code.
+Die strikte Einhaltung dieses reinen JSON-Ausgabeformats ist absolut KRITISCH und von höchster Bedeutung. Deine Antworten werden automatisiert von einer Software (SimONA-System) verarbeitet, die ausschließlich perfekt formatiertes, valides JSON erwartet. JEDE Abweichung, jedes zusätzliche Zeichen außerhalb des JSON-Strings, führt unweigerlich zu Systemfehlern bei der Datenverarbeitung.
+
+Weitere Detailanweisungen für Analyse-Prompts:
+- Die Detailanalyse für die Felder in den JSON-Strukturen hat auf Basis des explizit übergebenen Textauszugs zu erfolgen. Der ebenfalls bereitgestellte Link zur Quelle dient der Referenz und dem Gesamtkontextverständnis, darf aber nicht die Analyse des übergebenen Textauszugs ersetzen, es sei denn, der Prompt fordert explizit zur Recherche über die URL auf (z.B. für allgemeine Gesetzesinformationen).
+- Konzentriere dich strikt auf den Normtext und die exakten Anweisungen des jeweiligen Analyse-Prompts.
+- Absolute Fehlerfreiheit bei der Datenextraktion und strikte Einhaltung des spezifizierten JSON-Schemas sind von höchster Bedeutung.
+- Verarbeite nur den explizit genannten und übergebenen Normteil für die Detailanalyse der Felder, es sei denn, der Analyse-Prompt gibt anderslautende Anweisungen.
+
+WICHTIG: Nenne diesen Chat: {{NORMTEIL_BEZEICHNUNG}} {{GESETZ_ABK}} SimONA-Analyse.
+Antworte auf DIESEN SimONA_Priming_Systemanweisung-Prompt und NUR auf diesen einen Initial-Prompt ausschließlich mit der einzelnen Zeile: Ich bin bereit!`,
+
+    SimONA_P0_5_ParagraphAnalyse: `ANALYSEAUFTRAG: METADATEN- UND STRUKTURANALYSE EINES RECHTSPARAGRAPHEN
+
+KONTEXT:
+Du bist eine hochspezialisierte KI für die strukturelle Zerlegung und Metadaten-Extraktion von deutschen Rechtsnormen. Deine Aufgabe ist es, einen dir übergebenen Textblock, der einen vollständigen Paragraphen einer deutschen Rechtsnorm enthält, zu analysieren.
+
+ÜBERGEBENER TEXTBLOCK (enthält typischerweise Gesetzesnamen, Paragraphenüberschrift und den vollständigen Text des Paragraphen):
+"{{VOLLSTAENDIGER_PARAGRAPHENTEXT_INKL_UEBERSCHRIFTEN}}"
+
+ANWEISUNG:
+Analysiere den oben übergebenen Textblock sorgfältig und erfülle ZWEI Hauptaufgaben:
+1.  **Metadaten extrahieren:** Identifiziere den vollständigen Namen des Gesetzes, seine offizielle Abkürzung, die Nummer des Paragraphen und die offizielle Bezeichnung/Überschrift des Paragraphen.
+2.  **Struktur zerlegen:** Identifiziere alle einzelnen Absätze des Paragraphen (erkennbar an Nummerierungen wie (1), (2), (3a)) und zerlege jeden Absatz in seine einzelnen Sätze.
+
+Gib deine gesamte Analyse AUSSCHLIESSLICH als **einzelnes, valides JSON-Objekt** zurück, das exakt die folgende Struktur hat:
+
+{
+  "metadaten": {
+    "gesetz_vollstaendiger_name": "STRING - Der vollständige, offizielle Name des Gesetzes (z.B. 'Gesetz über den Aufenthalt, die Erwerbstätigkeit und die Integration von Ausländern im Bundesgebiet'). Extrahiere dies aus dem übergebenen Text.",
+    "gesetz_abkuerzung": "STRING - Die offizielle Abkürzung des Gesetzes (z.B. 'AufenthG'). Extrahiere dies aus dem übergebenen Text.",
+    "paragraph_nummer": "STRING - Die Nummer des Paragraphen (z.B. '11', '4'). Extrahiere dies aus dem übergebenen Text.",
+    "paragraph_offizielle_bezeichnung": "STRING - Die offizielle Überschrift des Paragraphen, falls vorhanden (z.B. 'Einreise- und Aufenthaltsverbot'). Extrahiere dies aus dem übergebenen Text. Gib null zurück, falls keine explizite Bezeichnung vorhanden ist."
+  },
+  "struktur": [
+    {
+      "absatz_nummer": "STRING - Die Nummer des Absatzes, wie sie im Text steht (z.B. '1', '2', '3a').",
+      "absatz_volltext": "TEXT - Der vollständige und exakte Text dieses einzelnen Absatzes, beginnend mit der Nummerierung in Klammern.",
+      "saetze": [
+        {
+          "satz_nummer": "INTEGER - Die fortlaufende Nummer des Satzes innerhalb dieses Absatzes (beginnend bei 1).",
+          "satz_text": "TEXT - Der vollständige und exakte Text dieses einzelnen Satzes."
+        }
+      ]
+    }
+  ]
+}
+
+WICHTIG:
+- Fülle alle Felder des "metadaten"-Objekts basierend auf den Informationen, die du im oberen Teil des übergebenen Textblocks findest.
+- Fülle das "struktur"-Array, indem du den Paragraphentext sorgfältig in seine Absätze und Sätze zerlegst.
+- Das gesamte Ergebnis muss ein einziges, valides JSON-Objekt sein, ohne jeglichen Begleittext davor oder danach.
+`,
+
+    SimONA_P1_EinheitMetadaten: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabelle: SimulationsEinheiten)
+
+NORMBEZUG:
+Gesetz/Verordnung (Abkürzung): {{GESETZ_ABK}}
+Zu analysierender Normteil (Paragraph, Absatz, Satz): {{NORMTEIL_BEZEICHNUNG}}
+Quelle-URL (für Gesamtkontext und Referenz): {{QUELLE_URL}}
+Exakter Wortlaut des zu analysierenden Normteils (Primärbasis für diese Extraktion): "{{NORMTEXT_AUSZUG}}"
+
+ANWEISUNG:
+Analysiere den oben bereitgestellten "Exakter Wortlaut des zu analysierenden Normteils" (\`{{NORMTEXT_AUSZUG}}\`). Extrahiere die regulär geforderten Informationen für das unten definierte JSON-Objekt, wie in den Beschreibungen der jeweiligen Felder angegeben.
+ZUSÄTZLICH zu diesen regulären Feldern, RECHERCHIERE auf Basis der ebenfalls bereitgestellten 'Quelle-URL' (\`{{QUELLE_URL}}\`) und der allgemeinen Angaben zum Gesetz (\`{{GESETZ_ABK}}\`) die folgenden spezifischen Metadaten und füge sie dem JSON-Objekt unter den dafür weiter unten definierten, separaten Schlüsseln hinzu:
+- Den vollständigen, offiziellen Namen des Gesetzes.
+- Eine prägnante Kurzbeschreibung des übergeordneten Regelungszwecks des gesamten **Paragraphen** (dessen Teil der Normtext ist) (max. 500 Zeichen).
+- Den aktuellen Stand (Datum der letzten Änderung oder Veröffentlichung) des Gesetzes.
+- Die offizielle Bezeichnung bzw. Überschrift des genannten Paragraphen, sofern vorhanden.
+Gib die Antwort AUSSCHLIESSLICH als einzelnes JSON-Objekt zurück, das ALLE regulären UND die zusätzlich recherchierten Schlüssel und Werte gemäß den Beschreibungen enthält:
+
+{
+  "Gesetz": "STRING (max 50 Zeichen) - Offizielle Abkürzung des Gesetzes (wie oben im NORMBEZUG angegeben, z.B. 'AufenthG').",
+  "Paragraph": "STRING (max 20 Zeichen) - Nummer des Paragraphen (z.B. '32', '5').",
+  "Absatz": "STRING (max 10 Zeichen) - Nummer des Absatzes des hier primär analysierten Textauszugs (z.B. '4', '1'). Falls nicht anwendbar oder der gesamte Paragraph ohne spezifische Absätze gemeint ist, gib null zurück.",
+  "Satz": "STRING (max 10 Zeichen) - Nummer des Satzes oder der Sätze des hier primär analysierten Textauszugs (z.B. '1', '1-2'). Falls nicht anwendbar, gib null zurück.",
+  "Kurzbeschreibung": "STRING (max 255 Zeichen) - Prägnante Zusammenfassung des zentralen Regelungszwecks des HIER PRIMÄR ANALYSIERTEN NORMTEILS (spezifischer Absatz/Satz).",
+  "Gesetzestext_Zitat_Analysierter_Teil": "TEXT - Gib hier exakt und unverändert den oben bei 'Exakter Wortlaut des zu analysierenden Normteils' bereitgestellten Text wieder, ohne jegliche zusätzliche Formatierungszeichen oder Klammern, die nicht im Originaltext des Normteils selbst enthalten sind.",
+  "Art_Rechtsfolge_Positiv_Typ": "STRING (max 100 Zeichen) - Allgemeine Art der primär angestrebten positiven Rechtsfolge bei Erfüllung der Voraussetzungen des analysierten Normteils (z.B. 'Erteilung Aufenthaltserlaubnis', 'Verlängerung Aufenthaltserlaubnis', 'Anspruch auf Leistungsgewährung').",
+  "FK_Entscheidungsart_ID_Lookup_Bezeichnung": "STRING (max 100 Zeichen) - Bestimme die Entscheidungsart für den analysierten Normteil (mögliche Werte: 'Gebundene Entscheidung', 'Ermessen (Regelermessen)', 'Ermessen (Soll-Vorschrift)', 'Ermessen (freies Ermessen)', 'Ermessen (intendiertes Ermessen)'). Wähle den passendsten Wert, ggf. unter Berücksichtigung des Gesamtkontexts des Paragraphen. Wenn unklar, nutze 'Zu prüfen durch Fachexperten'.",
+  "Ermessensleitlinien_Text": "TEXT - WENN die 'FK_Entscheidungsart_ID_Lookup_Bezeichnung' Ermessen indiziert (insb. 'Ermessen (freies Ermessen)', 'Ermessen (Regelermessen)', 'Ermessen (Soll-Vorschrift)' oder 'Ermessen (intendiertes Ermessen)'): a) PRÜFE ZUERST, ob der 'Exakter Wortlaut des zu analysierenden Normteils' explizite Kriterien, Faktoren oder Leitlinien für die Ausübung dieses Ermessens enthält (z.B. 'Hierbei sind ... zu berücksichtigen'). WENN JA, liste diese explizit genannten Kriterien/Faktoren/Leitlinien vollständig auf.
+    b) WENN NEIN (keine expliziten Kriterien für die Ermessensausübung im Text gefunden wurden) UND die Entscheidungsart 'Ermessen (Regelermessen)' oder 'Ermessen (Soll-Vorschrift)' ist, GIB AUS: 'Keine spezifischen Leitlinien für die Ausnahme von der Regel bzw. für die Regelfallentscheidung im Normtext gefunden. Allgemeine Grundsätze der Ermessensausübung und Verhältnismäßigkeit sind zu beachten.'
+    c) WENN NEIN (keine expliziten Kriterien im Text) UND es eine andere Form von freiem/intendiertem Ermessen ist, GIB AUS: 'Keine spezifischen Leitlinien für die Ermessensausübung im Normtext gefunden. Die Ermessensausübung muss sich am Zweck der Norm, den genannten Abwägungskriterien (falls vorhanden, siehe Punkt a) und den allgemeinen Rechtsgrundsätzen orientieren.'
+    d) WENN die Entscheidungsart KEIN Ermessen ist (z.B. 'Gebundene Entscheidung'), GIB AUS: null.",
+  "Gesetz_Vollstaendiger_Name": "STRING (max 500 Zeichen) - Der vollständige, offizielle Name des Gesetzes (z.B. 'Gesetz über den Aufenthalt, die Erwerbstätigkeit und die Integration von Ausländern im Bundesgebiet'). RECHERCHIERE diesen Namen basierend auf der 'Quelle-URL'. Wenn nicht auffindbar, gib null zurück.",
+  "Paragraf_Uebergreifende_Kurzbeschreibung": "STRING (max 500 Zeichen) - Eine prägnante Beschreibung, was der gesamte Paragraph (dessen Teil der Normtext ist) übergeordnet regelt (NICHT nur der spezifische Absatz/Satz). RECHERCHIERE diese Information basierend auf der 'Quelle-URL' und dem Kontext des Paragraphen. Wenn nicht auffindbar oder der Paragraph keine eigene übergreifende Beschreibung hat, gib null zurück.",
+  "Gesetz_Aktueller_Stand_Datum": "STRING (Format: 'YYYY-MM-DD' oder Text wie 'Stand: TT.MM.JJJJ', wie auf der Quellseite prominent ausgewiesen) - Das Datum des letzten Änderungsstandes oder der Veröffentlichung des Gesetzes. RECHERCHIERE diese Information basierend auf der 'Quelle-URL'. Wenn nicht auffindbar, gib null zurück.",
+  "Paragraph_Offizielle_Bezeichnung": "STRING (max 255 Zeichen) - Die offizielle Überschrift oder Bezeichnung des Paragraphen, falls im Gesetzestext vorhanden (z.B. 'Sachmangel', 'Allgemeine Voraussetzungen für die Leistungsgewährung'). RECHERCHIERE diese Information basierend auf der 'Quelle-URL'. Wenn keine offizielle Bezeichnung für den Paragraphen existiert, gib null zurück."
+}`,
+
+    SimONA_P2_ParameterExtraktion: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabelle: Parameter und Parameter_Antwortoptionen)
+
+NORMBEZUG:
+Gesetz/Verordnung (Abkürzung): {{GESETZ_ABK}}
+Zu analysierender Normteil (Paragraph, Absatz, Satz): {{NORMTEIL_BEZEICHNUNG}}
+Quelle-URL (für Gesamtkontext und Referenz): {{QUELLE_URL}}
+Exakter Wortlaut des Normteils (Primärquelle für DIESEN Prompt): "{{NORMTEXT_P1_ZITAT}}"
+
+ANWEISUNG:
+Analysiere den oben bereitgestellten "Exakter Wortlaut des Normteils". Deine Aufgabe ist es, ALLE einzelnen Tatbestandsmerkmale (Prüfkriterien, Bedingungen, Voraussetzungen) zu identifizieren, die für die Rechtsfolgen dieses Normteils relevant sind. Formuliere für jedes Tatbestandsmerkmal eine präzise Frage an einen Behördenmitarbeiter (\`Fragetext\`).
+
+Für jeden identifizierten Parameter (Frage) erstelle ein JSON-Objekt. Achte besonders auf folgende Aspekte bei der Erstellung jedes Parameter-Objekts:
+
+1.  **Grundvoraussetzungen (\`Ist_Grundvoraussetzung\`):**
+    * Prüfe, ob ein Parameter eine fundamentale Bedingung darstellt. Wenn die Nichterfüllung dieser Bedingung (typischerweise eine bestimmte Antwort auf die Frage, z.B. ein "Nein" bei einer positiven Voraussetzung) dazu führt, dass weitere Prüfungen für diesen Normteil oder einen wesentlichen Teil davon üblicherweise obsolet werden und direkt zu einem ablehnenden oder spezifischen Ergebnis führen würden, setze \`Ist_Grundvoraussetzung\` auf \`true\`. In allen anderen Fällen setze es auf \`false\` oder gib null zurück.
+
+2.  **Abhängigkeiten der Fragenanzeige (\`Anzeige_Bedingung\`):**
+    * Überlege für jeden Parameter sorgfältig, ob seine Anzeige von den Antworten auf einen oder mehrere andere, zuvor von dir für DENSELBEN Normteil definierte Parameter abhängt.
+    * Wenn ein Parameter nur angezeigt werden soll, wenn eine oder MEHRERE spezifische Bedingungen bezüglich der Antworten auf andere Parameter GLEICHZEITIG erfüllt sind (logische UND-Verknüpfung), dokumentiere dies im Array \`Anzeige_Bedingung\`.
+    * Jedes Objekt innerhalb des \`Anzeige_Bedingung\`-Arrays repräsentiert eine einzelne Bedingung, die erfüllt sein muss. Das Objekt muss die folgenden Schlüssel enthalten:
+        * \`Referenz_Parameter_ID\`: Die 'Parameter_ID' des anderen Parameters innerhalb DIESES Normteils, von dessen Antwort die aktuelle Frage abhängt.
+        * \`Referenz_Antwort_Operator\`: Der Operator für den Vergleich (z.B. 'IST_GLEICH', 'IST_NICHT_GLEICH', 'IST_WAHR', 'IST_FALSCH', 'IST_EINES_VON').
+        * \`Referenz_Antwort_Wert_Intern\`: Der erwartete interne Wert (String bei 'Option_Wert_Intern' oder 'Ja'/'Nein'; Boolean \`true\`/\`false\` bei 'IST_WAHR'/'IST_FALSCH'; Array von Strings bei 'IST_EINES_VON').
+    * Beispiel für eine UND-Bedingung: Wenn Frage P_Current nur angezeigt werden soll, falls P_Age mit Option 'O_16_18' beantwortet wurde UND P_Accompanied mit 'Nein' (interner Wert 'O_Unaccomp') beantwortet wurde, dann würde \`Anzeige_Bedingung\` so aussehen:
+        \`[ { "Referenz_Parameter_ID": "P_Age_ID", "Referenz_Antwort_Operator": "IST_GLEICH", "Referenz_Antwort_Wert_Intern": "O_16_18" }, { "Referenz_Parameter_ID": "P_Accompanied_ID", "Referenz_Antwort_Operator": "IST_GLEICH", "Referenz_Antwort_Wert_Intern": "O_Unaccomp" } ]\`
+    * Wenn ein Parameter immer angezeigt werden soll (nur abhängig von seiner \`Reihenfolge_Anzeige\` und nicht von anderen Parameterantworten), gib für \`Anzeige_Bedingung\` explizit \`null\` oder ein leeres Array \`[]\` zurück.
+
+3.  **Strukturierung komplexer Tatbestandsmerkmale:**
+    * Strukturiere komplexe Tatbestandsmerkmale (z.B. Alternativen wie 'A oder B oder C' als Antwortmöglichkeiten oder eine Aufzählung von Möglichkeiten) als EINEN Parameter mit dem Antworttyp 'AuswahlEinfach' und entsprechenden \`Antwortoptionen_bei_Auswahl\`.
+
+Gib deine Antwort AUSSCHLIESSLICH als JSON-Array zurück, das diese Parameter-Objekte enthält. Jedes Objekt muss exakt die unten definierten Schlüssel und Werte gemäß den Beschreibungen haben:
+[
+  {
+    "Parameter_ID": "STRING - Ein eindeutiger Bezeichner für diesen Parameter, beginnend mit P gefolgt von Paragraph (ohne §), Absatz (falls vorhanden, ohne 'Abs.') und einer kurzen beschreibenden Kennung (z.B. 'P_{{PARA_NUM}}_{{ABS_NUM}}_MerkmalName'). Ersetze Leerzeichen und Sonderzeichen im MerkmalName durch Unterstriche.",
+    "Reihenfolge_Anzeige": "INTEGER - Vorgeschlagene Reihenfolge für die Präsentation dieses Parameters als Frage an den Nutzer (beginnend bei 1 für den ersten Parameter dieses Normteils). Achte auf eine logische Abfolge, insbesondere bei abhängigen Fragen.",
+    "Fragetext": "TEXT - Formuliere eine klare, prägnante Frage an einen Behördenmitarbeiter, um die Erfüllung dieses Tatbestandsmerkmals/dieser Bedingung im Rahmen einer Fallsimulation zu prüfen.",
+    "Antworttyp": "STRING - Wähle einen der folgenden Typen: 'JaNein', 'AuswahlEinfach', 'TextfeldKurz'.",
+    "Antwortoptionen_bei_Auswahl": [ /* Dieses Array nur befüllen, wenn Antworttyp 'AuswahlEinfach' ist, sonst null oder leeres Array.
+      Für jede Option ein Objekt mit exakt folgenden Schlüsseln:
+      { "Option_Text": "STRING (max 512 Zeichen) - Anzeigetext der Option für den Nutzer.",
+        "Option_Wert_Intern": "STRING (max 100 Zeichen) - Eindeutiger interner Wert für die Regellogik (alphanumerisch, Unterstriche erlaubt, keine Leerzeichen oder Sonderzeichen).",
+        "Reihenfolge_Option": "INTEGER - Anzeigereihenfolge der Option innerhalb der Auswahl (beginnend bei 1)." }
+    */ ],
+    "Begleittext": "TEXT - Kurzer erklärender Text, der dem Nutzer bei der Beantwortung der Frage angezeigt werden kann. Konzentriere dich auf Definitionen oder Erläuterungen, die direkt aus dem Normtext oder eng verwandten allgemeinen Rechtsprinzipien abgeleitet sind und dem Verständnis dienen. Null, wenn nicht nötig.",
+    "Normbezug_Detail_Parameter": "STRING (max 255 Z.) - Die genaue Stelle im analysierten Normteil oder die relevante allgemeine Norm, auf die sich dieses Tatbestandsmerkmal bezieht.",
+    "Verweis_Normen_Info_Parameter": "STRING (max 255 Z.) - Falls dieser Parameter die Prüfung einer anderen Rechtsnorm impliziert oder Details in anderen Normen genannt werden, liste die Hauptnorm(en) auf. Null, wenn nicht anwendbar.",
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": "STRING - WICHTIGE SONDERREGELUNG: Für dieses Feld ist bis auf Weiteres IMMER der Wert null zu verwenden...",
+    "Ist_Grundvoraussetzung": "BOOLEAN - Entweder \`true\` oder \`false\` (oder null, was als \`false\` interpretiert wird), basierend auf der Analyse, ob dies eine fundamentale Grundvoraussetzung ist (siehe detaillierte Anweisung oben).",
+    "Anzeige_Bedingung": [
+    ],
+    "Text_Erfuellt_Pro": "TEXT - Formuliere einen prägnanten Text (max. 1-2 Sätze) für die 'Pro'-Liste...",
+    "Text_NichtErfuellt_Contra": "TEXT - Formuliere einen prägnanten Text (max. 1-2 Sätze) für die 'Contra'-Liste..."
+  }
+]
+Achte auf korrekte \`Parameter_ID\`-Benennung (müssen innerhalb des Normteils eindeutig sein) und eine logische \`Reihenfolge_Anzeige\` für alle Parameter dieses Normteils.`,
+
+    SimONA_P2_5_ErgebnisProfilVorschlaege: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Vorschlag für ErgebnisProfil-Referenzen)
+
+KONTEXTINFORMATIONEN DURCH EMMA BEREITGESTELLT:
+Aktuelle_SimulationsEinheit_ID: "{{SIM_EINHEIT_ID}}"
+Gesetz/Verordnung (Abkürzung): "{{GESETZ_ABK}}"
+Zu analysierender Normteil (Paragraph, Absatz, Satz): "{{NORMTEIL_BEZEICHNUNG}}"
+Exakter Wortlaut des Normteils: "{{NORMTEXT_AUSZUG}}"
+Informationen_zur_SimulationsEinheit_JSON (Extrahiert durch Prompt 1):
+{{P1_RESPONSE_JSON_STRING}}
+Verfuegbare_Parameter_Liste_JSON (Extrahiert durch Prompt 2):
+{{P2_RESPONSE_JSON_STRING}}
+
+ANWEISUNG:
+Analysiere den "Exakter Wortlaut des Normteils" unter Berücksichtigung der "Informationen_zur_SimulationsEinheit_JSON" (insbesondere der 'FK_Entscheidungsart_ID_Lookup_Bezeichnung') und der "Verfuegbare_Parameter_Liste_JSON".
+Identifiziere und schlage alle logisch unterscheidbaren und für eine Simulation relevanten Ergebnis-Kategorien (mögliche Ausgänge) für diesen Normteil vor.
+Gib die Antwort AUSSCHLIESSLICH als JSON-Array von Ergebnisprofil-Vorschlags-Objekten zurück. Jedes Objekt muss exakt die folgenden Schlüssel haben:
+
+[
+  {
+    "Vorgeschlagene_ErgebnisProfil_ID_Referenz": "STRING - Ein prägnanter, eindeutiger Bezeichner-Vorschlag für diese Ergebnis-Kategorie (alphanumerisch, Unterstriche erlaubt, z.B. 'EP_{{PARA_NUM}}_{{ABS_NUM}}_Positiv', 'EP_{{PARA_NUM}}_{{ABS_NUM}}_Negativ_GrundbedingungX_Fehlt', 'EP_{{PARA_NUM}}_{{ABS_NUM}}_Anwendung_AndereNormY', 'EP_{{PARA_NUM}}_{{ABS_NUM}}_Ermessen_Offen'). Nutze für [Para] und [Abs] die Werte '{{PARA_NUM}}' und '{{ABS_NUM}}'.",
+    "Vorgeschlagene_Kurzbeschreibung_Ergebnis": "STRING (max 255 Z.) - Eine kurze, klare Beschreibung, was diese Ergebnis-Kategorie repräsentiert (z.B. 'Positive Entscheidung: Anspruch besteht.', 'Negative Entscheidung: Voraussetzung X nicht erfüllt.', 'Sonderfall: Andere Norm §Y ist vorrangig anzuwenden.', 'Ermessensprüfung: Voraussetzungen für Ermessen sind erfüllt, Leitlinien anzeigen.')."
+  }
+]`,
+
+    SimONA_P2_7_ParameterKonklusionDetail: `ANALYSEAUFTRAG FÜR SimONA-SYSTEM (Detailanalyse konklusiver Parameter-Antworten)
+
+KONTEXTINFORMATIONEN DURCH VORHERIGE PROMPTS BEREITGESTELLT:
+Exakter Wortlaut des analysierten Normteils: "{{NORMTEXT_AUSZUG}}"
+Metadaten zur aktuellen Normeinheit (P1 Output):
+{{P1_RESPONSE_JSON_STRING}}
+Liste der für diesen Normteil identifizierten Parameter (P2 Output):
+{{P2_RESPONSE_JSON_STRING}}
+
+ANWEISUNG:
+Analysiere die bereitgestellte "Liste der identifizierten Parameter" (P2 Output) im Kontext des "Exakten Wortlauts des analysierten Normteils" und der "Metadaten zur aktuellen Normeinheit" (P1 Output).
+Konzentriere dich insbesondere auf Parameter, die in der P2-Liste mit \`"Ist_Grundvoraussetzung": true\` markiert sind (aber berücksichtige auch andere Parameter, falls deren Antworten offensichtlich konklusiv sind).
+
+Für JEDEN solchen Parameter, bei dem eine oder mehrere seiner spezifischen Antwortmöglichkeiten (\`Antwort_Wert_Intern\`) eine direkt abschließende oder blockierende Wirkung auf den weiteren Prüfpfad innerhalb dieses Normteils haben:
+1. Identifiziere diese spezifische(n) Antwortmöglichkeit(en).
+2. Bestimme die Art der Konklusion.
+3. Formuliere zwei Arten von Hinweistexten für den Nutzer.
+
+Gib deine Antwort AUSSCHLIESSLICH als JSON-Array zurück. Jedes Objekt in diesem Array repräsentiert einen Parameter aus dem P2-Output, der mindestens eine konklusive Antwortmöglichkeit hat, und muss exakt die folgenden Schlüssel haben:
+
+[
+  {
+    "Parameter_ID": "STRING - Die exakte 'Parameter_ID' des analysierten Parameters aus dem P2-Output.",
+    "Konklusive_Antworten_Info": [
+      {
+        "Antwort_Wert_Intern_Erwartet": "STRING/BOOLEAN - Der genaue 'Option_Wert_Intern' (bei 'AuswahlEinfach') oder der boolesche/string Wert ('Ja', 'Nein', true, false), der die konklusive Wirkung auslöst.",
+        "Konklusions_Typ": "STRING - Gib einen der folgenden Werte an: 'NEGATIV_BLOCKIEREND' (die Antwort führt dazu, dass der positive Ausgang der Normprüfung auf diesem Pfad nicht mehr erreicht werden kann und weitere Fragen auf diesem Pfad obsolet sind) oder 'POSITIV_ABSCHLIESSEND' (die Antwort führt direkt zu einem positiven (Teil-)Ergebnis auf diesem Pfad und macht weitere Fragen auf diesem Pfad für dieses Ergebnis obsolet).",
+        "Hinweis_Text_Kurz_Fuer_Meldung": "STRING (max. ca. 100 Zeichen) - Ein sehr prägnanter Hinweistext für den Nutzer, der die unmittelbare Konsequenz dieser Antwort zusammenfasst und in einer kleinen Meldung/einem Tooltip angezeigt werden kann (z.B. 'Anspruch nicht gegeben, da X fehlt.', 'Voraussetzung Y erfüllt, Teilergebnis Z erreicht.').",
+        "Hinweis_Text_Lang_Fuer_Begruendung": "TEXT (ca. 1-3 Sätze) - Eine ausführlichere Erklärung für den Nutzer, die im Ergebnisbericht oder einer detaillierten Begründung verwendet werden kann. Erläutere klar, warum diese spezifische Antwort zu dieser Konklusion führt und welche Auswirkungen dies auf die weitere Prüfung oder das Ergebnis hat."
+      }
+    ]
+  }
+]`,
+
+    SimONA_P3_RegelGenerierung: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabellen: Regeln und RegelBedingungen)
+
+KONTEXTINFORMATIONEN DURCH EMMA BEREITGESTELLT:
+Aktuelle_SimulationsEinheit_ID: "{{SIM_EINHEIT_ID}}"
+Gesetz/Verordnung (Abkürzung): "{{GESETZ_ABK}}"
+Zu analysierender Normteil (Paragraph, Absatz, Satz): "{{NORMTEIL_BEZEICHNUNG}}"
+Exakter Wortlaut des Normteils (Primärquelle für DIESEN Prompt): "{{NORMTEXT_AUSZUG}}"
+Verfuegbare_Parameter_Liste_JSON (Extrahiert durch Prompt 2 für diesen Normteil):
+{{P2_RESPONSE_JSON_STRING}}
+Verfügbare_ErgebnisProfile_Liste_JSON (Relevant für diesen Normteil - Vorgeschlagen durch P2.5, validiert durch Nutzer):
+{{P2_5_RESPONSE_JSON_STRING_VALIDATED}}
+
+ANWEISUNG:
+Basierend auf dem "Exakter Wortlaut des Normteils" und der "Verfügbare_Parameter_Liste_JSON", definiere die notwendigen Regeln, um zu den in "Verfügbare_ErgebnisProfile_Liste_JSON" genannten Ergebnissen zu gelangen.
+Gib die Antwort AUSSCHLIESSLICH als JSON-Array von Regel-Objekten zurück. Jedes Regel-Objekt repräsentiert eine einzelne Regel und muss exakt die folgenden Schlüssel haben:
+
+[
+  {
+    "Regel_Name": "STRING (max 100 Zeichen) - Ein beschreibender Name für diese Regel (z.B. 'Positive Entscheidung bei Erfüllung aller Kriterien', 'Ablehnung wegen fehlender Eigenschaft X', 'Ermessenseröffnung bei Härtefall', 'Anwendung Sonderregelung §36a').",
+    "Prioritaet": "INTEGER - Definiert die Auswertungsreihenfolge der Regeln (niedrigere Zahlen werden zuerst geprüft). WICHTIG: Innerhalb desselben Regelwerks (d.h. für die aktuell analysierte Normeinheit {{SIM_EINHEIT_ID}}) MUSS jede Regel eine EINZIGARTIGE Prioritätsnummer erhalten. Keine zwei Regeln dürfen dieselbe Priorität haben. Beginne mit niedrigen Zahlen für Regeln, die zuerst geprüft werden sollen (z.B. 5 oder 10 für sehr spezifische Ausschluss- oder Weichensteller-Regeln). Erhöhe die Prioritätsnummern für nachfolgende Regeln in sinnvollen, eindeutigen Schritten (z.B. 15, 20, 21, 22, 30, 35, 99 für eine Fallback-Regel). Ziel ist eine klare, hierarchische Auswertungsreihenfolge, bei der jede Regel eine eindeutige Position hat.",
+    "FK_ErgebnisProfil_ID_Referenz": "STRING - Die 'ErgebnisProfil_ID_Referenz' aus der oben bereitgestellten Liste, die ausgelöst wird, wenn diese Regel erfüllt ist.",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "STRING - Die 'Parameter_ID' des Parameters aus der oben bereitgestellten 'Verfuegbare_Parameter_Liste_JSON', der für diese Bedingung geprüft wird.",
+        "Operator": "STRING - Der Vergleichsoperator. Nutze 'IST_GLEICH' für JaNein-Antworten (erwarteter Wert 'Ja' oder 'Nein') und für AuswahlEinfach-Antworten (erwarteter Wert ist ein 'Option_Wert_Intern'). Nutze 'IST_WAHR' für JaNein-Parameter, wenn die Bedingung 'Ja' sein muss, oder 'IST_FALSCH', wenn die Bedingung 'Nein' sein muss.",
+        "Erwarteter_Wert_Intern": "STRING/BOOLEAN - Der Wert, mit dem der Parameter verglichen wird.
+          - Für 'IST_GLEICH' bei 'JaNein'-Typ: 'Ja' oder 'Nein' (als Strings).
+          - Für 'IST_GLEICH' bei 'AuswahlEinfach'-Typ: Der entsprechende 'Option_Wert_Intern' der gewählten Option (als String).
+          - Für 'IST_WAHR': true (Boolean).
+          - Für 'IST_FALSCH': false (Boolean)."
+      }
+    ]
+  }
+]`,
+
+    SimONA_P4_ErgebnisProfilDetails: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabelle: ErgebnisProfile)
+
+KONTEXTINFORMATIONEN DURCH EMMA BEREITGESTELLT:
+Aktuelle_SimulationsEinheit_ID: "{{SIM_EINHEIT_ID}}"
+Gesetz/Verordnung (Abkürzung): "{{GESETZ_ABK}}"
+Zu analysierender Normteil (Paragraph, Absatz, Satz): "{{NORMTEIL_BEZEICHNUNG}}"
+Exakter Wortlaut des Normteils (Primärquelle für DIESEN Prompt): "{{NORMTEXT_AUSZUG}}"
+Informationen_zur_SimulationsEinheit_JSON (Extrahiert durch Prompt 1 für diesen Normteil):
+{{P1_RESPONSE_JSON_STRING}}
+Verfuegbare_Parameter_Liste_JSON (Extrahiert durch Prompt 2 für diesen Normteil):
+{{P2_RESPONSE_JSON_STRING}}
+Zu_Definierende_ErgebnisProfile_IDs_Referenzen_Liste (Basierend auf den in Prompt 3 für die Regeln verwendeten 'FK_ErgebnisProfil_ID_Referenz'-Werten ODER der validierten Liste aus P2.5):
+{{P3_ERGEBNISPROFILE_IDS_USED_LIST_JSON}}
+
+ANWEISUNG:
+Für JEDE 'ErgebnisProfil_ID_Referenz' aus der "Zu_Definierende_ErgebnisProfile_IDs_Referenzen_Liste", erstelle ein detailliertes Ergebnisprofil-Objekt. Deine Antwort muss AUSSCHLIESSLICH ein JSON-Array dieser Ergebnisprofil-Objekte sein. Jedes Objekt muss exakt die folgenden Schlüssel haben:
+
+[
+  {
+    "ErgebnisProfil_ID_Referenz": "STRING - Die 'ErgebnisProfil_ID_Referenz' aus der Eingabeliste, für die dieses Profil gilt.",
+    "Profil_Name": "STRING (max 100 Zeichen) - Ein kurzer, beschreibender Name für dieses Ergebnisprofil (z.B. 'Härtefall: Anwendung §36a', 'Härtefall: Ablehnung - nicht einschlägig').",
+    "Entscheidungstext_Kurz_Vorlage": "TEXT - Der prägnante Text, der dem Nutzer als Kernaussage des Ergebnisses angezeigt wird (z.B. 'Die Voraussetzungen des § 32 Abs. 4 AufenthG sind nicht weiter zu prüfen. Es gilt § 36a AufenthG.', 'Aufenthaltserlaubnis kann nicht erteilt werden.', 'Ermessensprüfung erforderlich: Folgende Leitlinien sind zu beachten:').",
+    "Art_der_Entscheidung_Anzeige_Text": "STRING (max 100 Zeichen) - Der Text, der die Art der Entscheidung für dieses spezifische Ergebnis anzeigt (z.B. 'Spezifische Rechtsfolge', 'Negative Ermessensentscheidung (Voraussetzungen nicht erfüllt)', 'Ermessensentscheidung: Leitlinien'). Leite dies aus der 'FK_Entscheidungsart_ID_Lookup_Bezeichnung' der 'Informationen_zur_SimulationsEinheit_JSON' und dem spezifischen Ergebnis ab.",
+    "Einleitungstext_Begruendung_Vorlage": "TEXT - Ein einleitender Satz für die detaillierte Begründung/Pro-Contra-Liste (z.B. 'Die Prüfung der relevanten Voraussetzungen hat ergeben:', 'Folgende Aspekte wurden geprüft:').",
+    "Begruendung_Dynamische_Parameter_Liste": [
+    ],
+    "Spezifischer_Ergaenzungstext_Begruendung_Vorlage": "TEXT - Optionaler zusätzlicher Text... Für Ergebnisprofile, die Ermessensleitlinien darstellen, sollte hier der 'Ermessensleitlinien_Text' aus 'Informationen_zur_SimulationsEinheit_JSON' (falls vorhanden und relevant) oder eine Zusammenfassung davon stehen. Null, wenn nicht benötigt.",
+    "Abschlusstext_Begruendung_Vorlage": "TEXT - Ein abschließender Satz für die Begründung... Null, wenn nicht benötigt."
+  }
+]`,
+    
+    SimONA_P5_QualitaetsAudit: `ANALYSEAUFTRAG: QUALITÄTS-AUDIT EINES SimONA-DATENMODELLS
+
+DU BIST EIN HOCHSPEZIALISIERTER KI-RECHTSEXPERTE mit der Aufgabe, ein bestehendes, von einem anderen System erstelltes Datenmodell für eine deutsche Rechtsnorm auf seine fachliche Qualität und Plausibilität zu prüfen. Du agierst als unabhängiger Auditor.
+
+KONTEXT:
+Ein Fachexperte hat mithilfe einer KI den folgenden deutschen Normtext analysiert und in ein strukturiertes JSON-Datenmodell überführt. Deine Aufgabe ist es, dieses Ergebnis zu bewerten.
+
+URSPRÜNGLICHER NORMTEXT:
+"{{NORMTEXT_AUSZUG}}"
+
+VOM EXPERTEN ERSTELLTES UND VALIDERTES DATENMODELL (JSON):
+{{P1_P4_DATENSATZ_JSON}}
+
+// =================================================================
+BEWERTUNGSGRUNDSÄTZE FÜR DEIN AUDIT:
+1.  Fokus auf Substanz, nicht auf Stil: Bewerte primär die fachliche Korrektheit und den Sinngehalt, nicht die exakte Wortwahl.
+2.  Semantische Äquivalenz akzeptieren: Leichte Abweichungen in der Formulierung von Fragetexten oder Beschreibungen sind völlig akzeptabel, solange der juristische Kern und der Zweck für den Anwender unmissverständlich und korrekt getroffen werden. Betreibe keine "Wortklauberei". Eine Frage wie "Liegt eine unmittelbare Gefahr vor?" ist semantisch gleichwertig zu "Besteht eine unmittelbare Gefahr für das Kindeswohl?" und sollte nicht negativ bewertet werden, solange der Kontext klar ist.
+3.  Kritik an materiellen Fehlern: Konzentriere deine Kritik und negative Bewertungen auf materielle Fehler. Das sind:
+    * Fehlende oder falsch interpretierte Tatbestandsmerkmale.
+    * Falsche logische Verknüpfungen in den Regeln.
+    * Fachlich irreführende oder mehrdeutige Formulierungen, die zu einer falschen Anwendung durch einen Sachbearbeiter führen könnten.
+// =================================================================
+
+DEINE AUDIT-ANWEISUNGEN:
+Analysiere das übergebene "VOM EXPERTEN ERSTELLTES UND VALIDERTES DATENMODELL" sorgfältig im Abgleich mit dem "URSPRÜNGLICHER NORMTEXT" und unter Beachtung der oben genannten BEWERTUNGSGRUNDSÄTZE. Gib deine gesamte Analyse AUSSCHLIESSLICH als einzelnes, valides JSON-Objekt zurück, das exakt die folgende Struktur hat:
+
+{
+  "Gesamtbewertung": {
+    "Score": "FLOAT - Dein gewichteter Gesamt-Score für die Qualität des Modells auf einer Skala von 1.0 (mangelhaft) bis 10.0 (exzellent).",
+    "Fazit": "TEXT - Deine zusammenfassende Management-Summary in 1-2 Sätzen. Beispiel: 'Das Datenmodell ist von hoher Qualität, hat aber kleinere Schwächen bei der Abdeckung von Randbedingungen.'"
+  },
+  "Detailbewertungen": [
+    {
+      "Kategorie": "Vollständigkeit der Parameter",
+      "Score": "INTEGER - Dein Score von 1-10 für diese Kategorie.",
+      "Begruendung": "TEXT - Bewerte, ob alle relevanten Tatbestandsmerkmale, Bedingungen und Kriterien aus dem Normtext als Parameter erfasst wurden. Begründe deine Bewertung kurz. Wenn etwas Wichtiges fehlt, benenne es hier explizit. Beispiel: 'Die wesentlichen Merkmale sind erfasst. Das Kriterium 'in schwierigen Fällen' aus Satz 3 könnte für mehr Klarheit als eigener Ja/Nein-Parameter abgebildet werden, anstatt es nur im Ermessenstext zu erwähnen.'"
+    },
+    {
+      "Kategorie": "Logische Konsistenz der Regeln",
+      "Score": "INTEGER - Dein Score von 1-10 für diese Kategorie.",
+      "Begruendung": "TEXT - Bewerte, ob die definierten Regeln die Kausal- und Konditionalketten des Normtextes fachlich korrekt abbilden. **Prüfe dabei explizit die Auswertungsreihenfolge anhand der \`Prioritaet\`: Simuliere gedanklich den Prüfpfad. Wird ein spezifischerer Fall (z.B. ein strenges Verbot) korrekt VOR einem allgemeineren Fall (z.B. einer generellen Erlaubnis oder einem anderen Ausschlussgrund) geprüft? Decke eventuelle Logikfehler auf, die durch eine falsche Priorisierung entstehen.** Ist die Verknüpfung der einzelnen Bedingungen innerhalb der Regeln plausibel? Begründe deine Bewertung."
+    },
+    {
+      "Kategorie": "Qualität der Fragetexte und Ergebnisprofile",
+      "Score": "INTEGER - Dein Score von 1-10 für diese Kategorie.",
+      "Begruendung": "TEXT - Bewerte die Qualität der für den Endanwender formulierten Texte. Sind die 'Fragetexte' der Parameter klar, neutral und unmissverständlich? Sind die 'Entscheidungstext_Kurz_Vorlage' der Ergebnisprofile präzise und fachlich korrekt? Begründe deine Bewertung. Beispiel: 'Die Fragetexte sind gut verständlich. Der Entscheidungstext für Profil Y könnte präzisiert werden, um den Ermessensspielraum noch deutlicher zu machen.'"
+    }
+  ]
+}
+
+WICHTIG: Deine Bewertung soll streng, fair und konstruktiv sein, basierend auf den oben genannten Grundsätzen. Das Ziel ist es, dem Fachexperten zu helfen, die Qualität seiner Arbeit zu maximieren.
+`
+};

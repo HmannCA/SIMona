@@ -1,0 +1,257 @@
+const simonaData_s32_abs1 = {
+  "simulationsEinheit": "SE_AUFENTHG_32_Abs1",
+  "Gesetz": "AufenthG",
+  "Paragraph": "32",
+  "Absatz": "1",
+  "Satz": "1",
+  "Kurzbeschreibung": "Regelt den Anspruch auf Erteilung einer Aufenthaltserlaubnis für das minderjährige, ledige Kind eines Ausländers, wenn die Eltern oder der allein sorgeberechtigte Elternteil einen der im Gesetz genannten Aufenthaltstitel besitzen.",
+  "Gesetzestext_Zitat_Analysierter_Teil": "(1) Dem minderjährigen ledigen Kind eines Ausländers ist eine Aufenthaltserlaubnis zu erteilen, wenn beide Eltern oder der allein personensorgeberechtigte Elternteil einen der folgenden Aufenthaltstitel besitzt:\n1. Aufenthaltserlaubnis nach § 7 Absatz 1 Satz 3 oder nach Abschnitt 3 oder 4,\n2. Aufenthaltserlaubnis nach § 25 Absatz 1 oder Absatz 2 Satz 1 erste Alternative,\n3. Aufenthaltserlaubnis nach § 28, § 30, § 31, § 36 oder § 36a,\n4. Aufenthaltserlaubnis nach den übrigen Vorschriften mit Ausnahme einer Aufenthaltserlaubnis nach § 25 Absatz 2 Satz 1 zweite Alternative,\n5. Blaue Karte EU, ICT-Karte, Mobiler-ICT-Karte,\n6. Niederlassungserlaubnis oder\n7. Erlaubnis zum Daueraufenthalt – EU.",
+  "Art_Rechtsfolge_Positiv_Typ": "Erteilung Aufenthaltserlaubnis",
+  "FK_Entscheidungsart_ID_Lookup_Bezeichnung": "Gebundene Entscheidung",
+  "Ermessensleitlinien_Text": null
+},
+"parameterliste": [
+  {
+    "Parameter_ID": "P_32_1_Kind_Auslaender",
+    "Reihenfolge_Anzeige": 1,
+    "Fragetext": "Handelt es sich bei dem Antragsteller um ein Kind eines Ausländers, und ist das Kind selbst Ausländer?",
+    "Antworttyp": "JaNein",
+    "Antwortoptionen_bei_Auswahl": null,
+    "Begleittext": "Das Kind muss Ausländer sein. Der Elternteil (oder beide Elternteile), von dem/denen das Aufenthaltsrecht nach § 32 Abs. 1 AufenthG abgeleitet wird, muss ebenfalls Ausländer sein.",
+    "Normbezug_Detail_Parameter": "§ 32 Abs. 1 AufenthG (Merkmal: 'Kind eines Ausländers')",
+    "Verweis_Normen_Info_Parameter": "§ 2 Abs. 1 AufenthG (Definition Ausländer)",
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": null,
+    "Text_Erfuellt_Pro": "Das Kind ist Ausländer und Kind eines Ausländers im Sinne des § 32 Abs. 1 AufenthG.",
+    "Text_NichtErfuellt_Contra": "Das Kind ist kein Ausländer oder nicht Kind eines Ausländers. Die Voraussetzungen des § 32 Abs. 1 AufenthG sind nicht erfüllt."
+  },
+  {
+    "Parameter_ID": "P_32_1_Kind_Minderjaehrig",
+    "Reihenfolge_Anzeige": 2,
+    "Fragetext": "Ist das Kind, für das die Aufenthaltserlaubnis beantragt wird, minderjährig?",
+    "Antworttyp": "JaNein",
+    "Antwortoptionen_bei_Auswahl": null,
+    "Begleittext": "Minderjährig ist, wer das 18. Lebensjahr noch nicht vollendet hat (vgl. § 2 BGB). Maßgeblich ist in der Regel der Zeitpunkt der Entscheidung der Ausländerbehörde.",
+    "Normbezug_Detail_Parameter": "§ 32 Abs. 1 AufenthG (Merkmal: 'minderjährigen ... Kind')",
+    "Verweis_Normen_Info_Parameter": "§ 2 BGB",
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": null,
+    "Text_Erfuellt_Pro": "Das Kind ist minderjährig (§ 32 Abs. 1 AufenthG).",
+    "Text_NichtErfuellt_Contra": "Das Kind ist nicht minderjährig. Eine Voraussetzung des § 32 Abs. 1 AufenthG ist nicht erfüllt."
+  },
+  {
+    "Parameter_ID": "P_32_1_Kind_Ledig",
+    "Reihenfolge_Anzeige": 3,
+    "Fragetext": "Ist das Kind, für das die Aufenthaltserlaubnis beantragt wird, ledig?",
+    "Antworttyp": "JaNein",
+    "Antwortoptionen_bei_Auswahl": null,
+    "Begleittext": "Ledig bedeutet, dass das Kind weder verheiratet ist noch eine eingetragene Lebenspartnerschaft führt und auch nicht verwitwet oder geschieden ist.",
+    "Normbezug_Detail_Parameter": "§ 32 Abs. 1 AufenthG (Merkmal: 'ledigen Kind')",
+    "Verweis_Normen_Info_Parameter": null,
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": null,
+    "Text_Erfuellt_Pro": "Das Kind ist ledig (§ 32 Abs. 1 AufenthG).",
+    "Text_NichtErfuellt_Contra": "Das Kind ist nicht ledig. Eine Voraussetzung des § 32 Abs. 1 AufenthG ist nicht erfüllt."
+  },
+  {
+    "Parameter_ID": "P_32_1_Eltern_Konstellation",
+    "Reihenfolge_Anzeige": 4,
+    "Fragetext": "Trifft eine der folgenden Konstellationen bezüglich der Eltern und ihres jeweiligen Aufenthaltstitels zu?",
+    "Antworttyp": "AuswahlEinfach",
+    "Antwortoptionen_bei_Auswahl": [
+      {
+        "Option_Text": "Beide Elternteile besitzen jeweils einen der in § 32 Abs. 1 Nr. 1-7 AufenthG genannten Aufenthaltstitel.",
+        "Option_Wert_Intern": "Beide_Eltern_Mit_Titel",
+        "Reihenfolge_Option": 1
+      },
+      {
+        "Option_Text": "Der allein personensorgeberechtigte Elternteil besitzt einen der in § 32 Abs. 1 Nr. 1-7 AufenthG genannten Aufenthaltstitel.",
+        "Option_Wert_Intern": "Allein_Sorgeberechtigt_Mit_Titel",
+        "Reihenfolge_Option": 2
+      },
+      {
+        "Option_Text": "Keine der oben genannten Konstellationen trifft zu.",
+        "Option_Wert_Intern": "Andere_Konstellation_Nicht_Erfuellt",
+        "Reihenfolge_Option": 3
+      }
+    ],
+    "Begleittext": "Die Norm erfordert, dass entweder beide Elternteile oder der Elternteil, dem die Personensorge allein zusteht, einen der in § 32 Abs. 1 Nr. 1-7 AufenthG genannten Aufenthaltstitel besitzt.",
+    "Normbezug_Detail_Parameter": "§ 32 Abs. 1 AufenthG (Merkmal: 'beide Eltern oder der allein personensorgeberechtigte Elternteil ... besitzt')",
+    "Verweis_Normen_Info_Parameter": "Regelungen zum Sorgerecht, z.B. §§ 1626 ff. BGB",
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": null,
+    "Text_Erfuellt_Pro": "Die Voraussetzung hinsichtlich der sorgeberechtigten Elternteile und deren Besitz eines relevanten Aufenthaltstitels gemäß § 32 Abs. 1 AufenthG ist erfüllt.",
+    "Text_NichtErfuellt_Contra": "Die Voraussetzung hinsichtlich der sorgeberechtigten Elternteile und deren Besitz eines relevanten Aufenthaltstitels gemäß § 32 Abs. 1 AufenthG ist nicht erfüllt."
+  },
+  {
+    "Parameter_ID": "P_32_1_Eltern_Aufenthaltstitel",
+    "Reihenfolge_Anzeige": 5,
+    "Fragetext": "Welchen der in § 32 Abs. 1 Nr. 1-7 AufenthG genannten Aufenthaltstitel besitzt der maßgebliche Elternteil bzw. besitzen die maßgeblichen Elternteile?",
+    "Antworttyp": "AuswahlEinfach",
+    "Antwortoptionen_bei_Auswahl": [
+      {
+        "Option_Text": "Aufenthaltserlaubnis nach § 7 Abs. 1 S. 3 AufenthG oder nach Abschnitt 3 oder 4 AufenthG (gem. § 32 Abs. 1 Nr. 1 AufenthG)",
+        "Option_Wert_Intern": "AT_7Abs1S3_Abschn3_4",
+        "Reihenfolge_Option": 1
+      },
+      {
+        "Option_Text": "Aufenthaltserlaubnis nach § 25 Abs. 1 AufenthG oder § 25 Abs. 2 S. 1 erste Alternative AufenthG (gem. § 32 Abs. 1 Nr. 2 AufenthG)",
+        "Option_Wert_Intern": "AT_25Abs1_25Abs2S1Alt1",
+        "Reihenfolge_Option": 2
+      },
+      {
+        "Option_Text": "Aufenthaltserlaubnis nach § 28, § 30, § 31, § 36 oder § 36a AufenthG (gem. § 32 Abs. 1 Nr. 3 AufenthG)",
+        "Option_Wert_Intern": "AT_28_30_31_36_36a",
+        "Reihenfolge_Option": 3
+      },
+      {
+        "Option_Text": "Aufenthaltserlaubnis nach den übrigen Vorschriften (mit Ausnahme einer Aufenthaltserlaubnis nach § 25 Abs. 2 S. 1 zweite Alternative AufenthG) (gem. § 32 Abs. 1 Nr. 4 AufenthG)",
+        "Option_Wert_Intern": "AT_Uebrige_Ausn_25Abs2S1Alt2",
+        "Reihenfolge_Option": 4
+      },
+      {
+        "Option_Text": "Blaue Karte EU, ICT-Karte oder Mobiler-ICT-Karte (gem. § 32 Abs. 1 Nr. 5 AufenthG)",
+        "Option_Wert_Intern": "AT_BlaueKarteEU_ICT_MobilICT",
+        "Reihenfolge_Option": 5
+      },
+      {
+        "Option_Text": "Niederlassungserlaubnis (gem. § 32 Abs. 1 Nr. 6 AufenthG)",
+        "Option_Wert_Intern": "AT_Niederlassungserlaubnis",
+        "Reihenfolge_Option": 6
+      },
+      {
+        "Option_Text": "Erlaubnis zum Daueraufenthalt – EU (gem. § 32 Abs. 1 Nr. 7 AufenthG)",
+        "Option_Wert_Intern": "AT_Daueraufenthalt_EU",
+        "Reihenfolge_Option": 7
+      },
+      {
+        "Option_Text": "Keinen der oben genannten Aufenthaltstitel.",
+        "Option_Wert_Intern": "AT_Kein_Passender_Titel",
+        "Reihenfolge_Option": 8
+      }
+    ],
+    "Begleittext": "Wählen Sie den zutreffenden Aufenthaltstitel aus. Wenn beide Elternteile einen Titel besitzen, wählen Sie einen der Titel aus (beide müssen nicht denselben Titel haben, aber jeder einen aus der Liste).",
+    "Normbezug_Detail_Parameter": "§ 32 Abs. 1 Nr. 1-7 AufenthG (Merkmal: 'einen der folgenden Aufenthaltstitel besitzt')",
+    "Verweis_Normen_Info_Parameter": "Details in: §7, §§16a-26, §25, §§28,30,31,36,36a; Normen für Blaue Karte EU, ICT, Mobile-ICT, NE, DA-EU (z.B. §§18g,19,19b,9,9a) AufenthG.",
+    "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": null,
+    "Text_Erfuellt_Pro": "Der/die maßgebliche(n) Elternteil(e) besitzt/besitzen einen der in § 32 Abs. 1 Nr. 1-7 AufenthG geforderten Aufenthaltstitel.",
+    "Text_NichtErfuellt_Contra": "Der/die maßgebliche(n) Elternteil(e) besitzt/besitzen keinen der in § 32 Abs. 1 Nr. 1-7 AufenthG geforderten Aufenthaltstitel. Diese Voraussetzung des § 32 Abs. 1 AufenthG ist nicht erfüllt."
+  }
+],
+"regelwerk": {
+    "Regelwerk_ID": "SE_AUFENTHG_32_Abs1", // Identisch zur Einheit_ID
+    "Beschreibung": "Regelwerk für § 32 Abs. 1 AufenthG",
+    "regeln": [
+  {
+    "Regel_Name": "Ablehnung: Kind nicht Ausländer oder nicht Kind eines Ausländers",
+    "Prioritaet": 10,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Kind_Status_Fehlt",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "P_32_1_Kind_Auslaender",
+        "Operator": "IST_FALSCH",
+        "Erwarteter_Wert_Intern": false
+      }
+    ]
+  },
+  {
+    "Regel_Name": "Ablehnung: Kind nicht minderjährig",
+    "Prioritaet": 11,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Kind_Status_Fehlt",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "P_32_1_Kind_Minderjaehrig",
+        "Operator": "IST_FALSCH",
+        "Erwarteter_Wert_Intern": false
+      }
+    ]
+  },
+  {
+    "Regel_Name": "Ablehnung: Kind nicht ledig",
+    "Prioritaet": 12,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Kind_Status_Fehlt",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "P_32_1_Kind_Ledig",
+        "Operator": "IST_FALSCH",
+        "Erwarteter_Wert_Intern": false
+      }
+    ]
+  },
+  {
+    "Regel_Name": "Ablehnung: Elternkonstellation oder deren Titelbesitz ungültig",
+    "Prioritaet": 20,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Eltern_Voraussetzung_Fehlt",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "P_32_1_Eltern_Konstellation",
+        "Operator": "IST_GLEICH",
+        "Erwarteter_Wert_Intern": "Andere_Konstellation_Nicht_Erfuellt"
+      }
+    ]
+  },
+  {
+    "Regel_Name": "Ablehnung: Aufenthaltstitel der Eltern nicht passend",
+    "Prioritaet": 21,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Eltern_Voraussetzung_Fehlt",
+    "Bedingungen_fuer_Regel": [
+      {
+        "FK_Parameter_ID": "P_32_1_Eltern_Aufenthaltstitel",
+        "Operator": "IST_GLEICH",
+        "Erwarteter_Wert_Intern": "AT_Kein_Passender_Titel"
+      }
+    ]
+  },
+  {
+    "Regel_Name": "Positive Entscheidung: Alle Voraussetzungen nach § 32 Abs. 1 AufenthG erfüllt",
+    "Prioritaet": 100,
+    "FK_ErgebnisProfil_ID_Referenz": "EP_32_1_Positiv_Anspruch_Erfuellt",
+    "Bedingungen_fuer_Regel": []
+  }
+]
+},
+"ergebnisProfile": [
+  {
+    "ErgebnisProfil_ID_Referenz": "EP_32_1_Positiv_Anspruch_Erfuellt",
+    "Profil_Name": "Anspruch auf Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG besteht",
+    "Entscheidungstext_Kurz_Vorlage": "Dem Kind ist eine Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG zu erteilen.",
+    "Art_der_Entscheidung_Anzeige_Text": "Positive Entscheidung (Gebundene Entscheidung)",
+    "Einleitungstext_Begruendung_Vorlage": "Die Prüfung der Voraussetzungen des § 32 Abs. 1 AufenthG für die Erteilung einer Aufenthaltserlaubnis an das minderjährige, ledige Kind hat Folgendes ergeben:",
+    "Begruendung_Dynamische_Parameter_Liste": [
+      "P_32_1_Kind_Auslaender",
+      "P_32_1_Kind_Minderjaehrig",
+      "P_32_1_Kind_Ledig",
+      "P_32_1_Eltern_Konstellation",
+      "P_32_1_Eltern_Aufenthaltstitel"
+    ],
+    "Spezifischer_Ergaenzungstext_Begruendung_Vorlage": null,
+    "Abschlusstext_Begruendung_Vorlage": "Da alle Voraussetzungen des § 32 Abs. 1 AufenthG erfüllt sind, besteht ein Anspruch auf Erteilung der Aufenthaltserlaubnis."
+  },
+  {
+    "ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Kind_Status_Fehlt",
+    "Profil_Name": "Ablehnung: Status des Kindes (§ 32 Abs. 1 AufenthG) nicht erfüllt",
+    "Entscheidungstext_Kurz_Vorlage": "Dem Kind kann keine Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG erteilt werden, da die persönlichen Voraussetzungen des Kindes nicht erfüllt sind.",
+    "Art_der_Entscheidung_Anzeige_Text": "Negative Entscheidung (Gebundene Entscheidung)",
+    "Einleitungstext_Begruendung_Vorlage": "Die Prüfung der Voraussetzungen des § 32 Abs. 1 AufenthG hat ergeben, dass die persönlichen Voraussetzungen des Kindes nicht erfüllt sind. Im Einzelnen:",
+    "Begruendung_Dynamische_Parameter_Liste": [
+      "P_32_1_Kind_Auslaender",
+      "P_32_1_Kind_Minderjaehrig",
+      "P_32_1_Kind_Ledig"
+    ],
+    "Spezifischer_Ergaenzungstext_Begruendung_Vorlage": null,
+    "Abschlusstext_Begruendung_Vorlage": "Aufgrund der Nichterfüllung mindestens einer dieser persönlichen Voraussetzungen des Kindes besteht kein Anspruch auf Erteilung der Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG."
+  },
+  {
+    "ErgebnisProfil_ID_Referenz": "EP_32_1_Negativ_Eltern_Voraussetzung_Fehlt",
+    "Profil_Name": "Ablehnung: Eltern-Voraussetzung (§ 32 Abs. 1 AufenthG) nicht erfüllt",
+    "Entscheidungstext_Kurz_Vorlage": "Dem Kind kann keine Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG erteilt werden, da die Voraussetzungen bezüglich der Eltern (Sorgerechtskonstellation oder deren Aufenthaltstitel) nicht erfüllt sind.",
+    "Art_der_Entscheidung_Anzeige_Text": "Negative Entscheidung (Gebundene Entscheidung)",
+    "Einleitungstext_Begruendung_Vorlage": "Die Prüfung der Voraussetzungen des § 32 Abs. 1 AufenthG hat ergeben, dass die Voraussetzungen bezüglich der Eltern nicht erfüllt sind. Im Einzelnen:",
+    "Begruendung_Dynamische_Parameter_Liste": [
+      "P_32_1_Kind_Auslaender",
+      "P_32_1_Kind_Minderjaehrig",
+      "P_32_1_Kind_Ledig",
+      "P_32_1_Eltern_Konstellation",
+      "P_32_1_Eltern_Aufenthaltstitel"
+    ],
+    "Spezifischer_Ergaenzungstext_Begruendung_Vorlage": null,
+    "Abschlusstext_Begruendung_Vorlage": "Obwohl die persönlichen Voraussetzungen des Kindes erfüllt sind, besteht aufgrund der Nichterfüllung mindestens einer elternbezogenen Voraussetzung kein Anspruch auf Erteilung der Aufenthaltserlaubnis nach § 32 Abs. 1 AufenthG."
+  }
+]
+};

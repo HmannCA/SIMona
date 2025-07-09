@@ -1,0 +1,183 @@
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 { color: #2c3e50; }
+        h1 { text-align: center; margin-bottom: 20px;}
+        h2 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px; }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="text"], textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+        textarea {
+            min-height: 100px;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: scroll;
+            font-family: "Courier New", Courier, monospace;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .prompt-output-area {
+            margin-top:15px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+        }
+        .step-section {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+        .step-section h3 { margin-top: 0; color: #3498db; }
+        .id-display { font-weight: bold; color: #27ae60; margin-top:5px; }
+        .info { font-size: 0.9em; color: #7f8c8d; margin-top: 5px;}
+
+        textarea + button.copy-button { /* Spezifischer für Kopierbuttons direkt nach Textarea */
+            display: inline-block; 
+            margin-left: 10px;
+            margin-top: -5px; /* Leicht nach oben für bessere Ausrichtung neben der Textarea-Beschriftung */
+            vertical-align: top;
+            background-color: #7f8c8d; 
+            font-size: 0.8em;
+            padding: 6px 10px;
+        }
+         textarea + button.copy-button:hover {
+            background-color: #6c7a89;
+        }
+
+        .sql-button { /* Eigene Klasse für SQL-Generierungsbuttons */
+             background-color: #27ae60;
+        }
+        .sql-button:hover {
+             background-color: #229954;
+        }
+
+
+        #gesamtesSqlOutput {
+            width: calc(100% - 22px); 
+            margin-top: 10px;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: scroll;
+            background-color: #eef1f3; 
+            border: 1px solid #c8d0d8;
+        }
+
+
+        #p2_5_suggestions_editor_area .suggestion-item {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: #ffffff; /* Heller für bessere Lesbarkeit der Inputs */
+        }
+        #p2_5_suggestions_editor_area .suggestion-item label { /* Weniger prominent für die Editor-Labels */
+            font-size: 0.85em;
+            color: #555;
+            font-weight: normal;
+        }
+        #p2_5_suggestions_editor_area .suggestion-item input[type="text"],
+        #p2_5_suggestions_editor_area .suggestion-item textarea {
+            width: calc(100% - 12px); /* Anpassung für Padding im Item */
+            padding: 6px;
+            margin-top: 2px;
+            margin-bottom: 8px;
+        }
+        #p2_5_suggestions_editor_area .suggestion-item button {
+            margin-right: 5px;
+            font-size: 0.85em;
+            padding: 5px 10px;
+            background-color: #5dade2; 
+        }
+         #p2_5_suggestions_editor_area .suggestion-item button:hover {
+            background-color: #3498db;
+         }
+        #p2_5_suggestions_editor_area .suggestion-item .display-text {
+            padding: 5px 0;
+            display: block; /* Sorgt für Zeilenumbruch, falls Text lang ist */
+            word-break: break-all; /* Hilft bei sehr langen IDs ohne Leerzeichen */
+        }
+        #p2_5_suggestions_editor_area ul {
+             margin-top: 10px;
+        }
+
+	/* --- NEUE STILE FÜR VALIDIERUNGSBERICHT --- */
+	#validation-report-area {
+	    margin-top: 15px;
+	    padding: 15px;
+	    border-radius: 5px;
+	    font-size: 0.9em;
+	    border: 1px solid;
+	}
+
+	#validation-report-area.success {
+	    background-color: #e6ffed;
+	    border-color: #28a745;
+	    color: #155724;
+	}
+
+	#validation-report-area.error {
+	    background-color: #fdecea;
+	    border-color: #dc3545;
+	    color: #721c24;
+	}
+
+	#validation-report-area ul {
+	    list-style-position: inside;
+	    padding-left: 5px;
+	    margin-top: 10px;
+	}
+
+/* --- NEUE STILE FÜR STATUS-BANNER --- */
+#status-banner {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+    display: none; /* Standardmäßig ausgeblendet */
+    background-color: #eafaf1;
+    color: #1d6a4a;
+    border: 1px solid #a3e9c5;
+}

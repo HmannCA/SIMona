@@ -1,0 +1,793 @@
+/* ... (Ihr gesamtes bisheriges CSS hier einfügen) ... */
+/* Grundlegende Reset- und Box-Sizing-Regeln */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f4f8; /* Sehr helles, neutrales Grau-Blau */
+            color: #343a40; /* Dunkleres Grau für Haupttext, guter Kontrast */
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-wrapper {
+            width: 90%;
+            max-width: 1800px;
+            background-color: #ffffff; 
+            border-radius: 12px;     
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); 
+            padding: 30px; /* Mehr Innenabstand */
+            display: flex;
+            flex-direction: column;
+            gap: 30px; 
+            border: 1px solid #dee2e6; 
+        }
+
+        header {
+            width: 100%;
+            padding: 15px 25px; 
+            background-color: #ffffff; /* Sauberer weißer Header */
+            border-bottom: 2px solid #007bff; /* Blauer Akzent unten */
+            border-radius: 8px 8px 0 0; /* Nur obere Ecken abgerundet, passend zum Wrapper */
+            text-align: center;
+        }
+
+        header h1 {
+            color: #007bff; 
+            font-size: 1.9em; 
+            font-weight: 600; 
+        }
+
+        .main-simulation-area {
+            display: flex;
+            gap: 30px;
+            flex-grow: 1;
+        }
+
+        .left-panel, .right-panel { /* Gemeinsame Stile für beide Panels */
+            background-color: #f8f9fa; /* Heller Hintergrund für die Panels */
+            padding: 25px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .left-panel {
+            flex: 2.5; /* Etwas angepasstes Verhältnis */
+        }
+
+        .right-panel {
+            flex: 1.5;
+        }
+
+        .panel-section {
+            background-color: #ffffff; 
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e0e6ed;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05); 
+        }
+
+        .panel-section h2 {
+            color: #0056b3; /* Dunkleres Blau für Sektionsüberschriften */
+            font-size: 1.25em; 
+            margin-bottom: 15px;
+            font-weight: 600; /* Etwas kräftiger */
+            border-bottom: 2px solid #ced4da; 
+            padding-bottom: 10px;
+        }
+        
+        /* Spezieller Akzent für die Norminformation-Überschrift mit CI-Rot */
+        .norm-info h2 {
+             border-left: 4px solid #BA4A41; /* CI Rot (RGB 186,74,65) als linker Rand */
+             padding-left: 10px;
+             border-bottom: none; /* Untere Linie entfernen, da linker Rand Akzent ist */
+        }
+
+
+        .norm-text-display pre {
+            background-color: #e9ecef; /* Heller Hintergrund für Code/Text */
+            color: #212529; 
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            font-size: 0.95em; 
+        }
+        
+        .parameter-frage { 
+            font-size: 1.1em; /* Etwas kleiner für Kompaktheit */
+            color: #212529; 
+            margin-bottom: 8px; 
+            font-weight: 500; 
+        }
+        .begleit-text { 
+            font-size: 0.85em; /* Kleiner für Begleittext */
+            color: #5a6268; 
+            margin-bottom: 15px; 
+            line-height: 1.5;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #007bff; /* Blauer Akzent für Begleittexte */
+            border-radius: 0 4px 4px 0;
+        }
+
+/* style.css */
+
+/* Diese Regel wird angepasst, um Flexbox zu verwenden */
+.interaction-options label {
+    display: flex;             /* NEU: Flexbox für Ausrichtung von Input und Text */
+    align-items: center;       /* NEU: Vertikal zentrieren */
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+.interaction-options label:hover {
+    background-color: #e2e6ea;
+    border-color: #0069d9;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Diese Regel wird angepasst (Selektor und vertical-align) */
+.interaction-options label input[type="radio"] { /* Selektor präzisiert: Input INNERHALB des Labels */
+    margin-right: 10px;
+    /* vertical-align: middle; ENTFERNEN oder auskommentieren - nicht für Flexbox-Items benötigt */
+    transform: scale(1.1); /* Kann bleiben, wenn gewünscht */
+}
+
+/* Optional: Zusätzliches Styling für den Text innerhalb des Labels, falls benötigt */
+.interaction-options label span {
+    /* z.B. font-size: 0.9em; */
+    /* flex-grow: 1; /* Wenn der Text den restlichen Platz einnehmen soll */
+}
+
+/* Überprüfen und ggf. entfernen/anpassen, da div.horizontal-radios nicht mehr so verwendet wird: */
+/*
+.parameter-group .horizontal-radios div {
+    display: inline-block;
+    margin-right: 20px;
+}
+.parameter-group .horizontal-radios label { /* Diese Regel würde jetzt das äußere Label stylen, was evtl. nicht gewollt ist */
+/* margin-right: 5px;
+}
+*/
+        
+        .progress-indicator { text-align: center; }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e9ecef; 
+            border-radius: 25px; /* Stärker abgerundet */
+            padding: 4px;
+            border: 1px solid #ced4da;
+        }
+        .progress-bar {
+            width: 40%; 
+            height: 20px; /* Etwas höher */
+            background: linear-gradient(90deg, #007bff, #0056b3); /* Farbverlauf für die Leiste */
+            border-radius: 20px; /* Passend zum Container */
+            text-align: center;
+            line-height: 20px;
+            font-size: 0.85em;
+            color: #ffffff; 
+            transition: width 0.5s ease-in-out; 
+            box-shadow: 0 2px 4px rgba(0, 86, 179, 0.4); /* Schatten für 3D-Effekt */
+        }
+
+        .pro-contra-list h3 { 
+            font-size: 1.05em; /* Etwas kleiner */
+            color: #495057;
+            margin-bottom: 8px; /* Reduziert */
+        }
+        .pro-contra-list ul { list-style: none; padding: 0; }
+        .pro-contra-list li {
+            padding: 8px 10px; /* Padding für Listenelemente */
+            border-bottom: 1px solid #f1f3f5; 
+            font-size: 0.9em; /* Etwas kleiner */
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .pro-contra-list li:last-child { border-bottom: none; }
+        .pro-contra-list li.pro { background-color: #e6ffed; border-left: 4px solid #28a745; color: #155724;}
+        .pro-contra-list li.pro::before { content: '✔ '; color: #28a745; margin-right: 8px; font-weight: bold; } 
+        .pro-contra-list li.contra { background-color: #fdecea; border-left: 4px solid #dc3545; color: #721c24;}
+        .pro-contra-list li.contra::before { content: '✘ '; color: #dc3545; margin-right: 8px; font-weight: bold; } 
+
+        .action-buttons { text-align: right; margin-top: auto; }
+        .action-buttons button {
+            background-color: #007bff; 
+            color: #ffffff;
+            padding: 12px 25px; 
+            border: none;
+            border-radius: 5px;
+            font-size: 1.05em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .action-buttons button:hover {
+            background-color: #0056b3; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        #btn-norm-laden { text-align: right; margin-top: auto; }
+        #btn-norm-laden {
+            color: #ffffff; 
+            border: none;
+            border-radius: 5px;
+            font-size: 1.05em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+	#btn-norm-laden {
+	background-color: #00ab34; 
+	padding: 8px 15px; 
+	margin-top: 20px;
+	}
+
+	#btn-norm-laden:hover { 
+	background-color: #048f2e; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+	}
+
+        .diagram-placeholder {
+            height: 150px;
+            background-color: #f8f9fa; 
+            border: 1px dashed #adb5bd; /* Etwas dunklerer gestrichelter Rahmen */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d; 
+            border-radius: 5px;
+            font-style: italic;
+            text-align: center; /* Text zentrieren */
+        }
+        
+        /* Optional: Akzentlinie für Panel-Sektionen (außer Norm-Info) */
+        .panel-section:not(.norm-info) h2 {
+             /* border-left: 4px solid #ffc107; /* CI Gelb als Beispiel für andere Akzente */
+             /* padding-left: 10px; */
+             /* border-bottom: 1px solid #e0e0e0; /* Untere Linie beibehalten oder anpassen */
+        }
+
+
+        /* Responsive Anpassungen */
+        @media (max-width: 1200px) {
+            .main-simulation-area {
+                flex-direction: column;
+            }
+            .left-panel, .right-panel {
+                flex: none; 
+                width: 100%;
+            }
+        }
+         @media (max-width: 768px) {
+            .dashboard-wrapper {
+                width: 95%;
+                padding: 15px;
+            }
+            header h1 { font-size: 1.6em; } /* Etwas größer für Mobil */
+            .panel-section h2 { font-size: 1.1em; } 
+            .parameter-frage { font-size: 1em; } 
+        }
+
+/* ... (bestehendes CSS von oben bleibt) ... */
+
+        /* Styling für Toggle Switches */
+        .toggle-switch-container {
+            display: flex;
+            align-items: center;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px; /* Breite des Schalters */
+            height: 24px; /* Höhe des Schalters */
+            margin-right: 10px;
+        }
+        .toggle-switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; /* Größe des Schiebers */
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #007bff; /* Farbe wenn aktiv */
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #007bff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px); /* Bewegung des Schiebers */
+        }
+        .slider.round {
+            border-radius: 24px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        .toggle-label {
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        /* Styling für Slider */
+        .slider-container {
+            padding: 10px 0;
+        }
+        .slider-element {
+            width: 100%;
+            cursor: pointer;
+            accent-color: #007bff; /* Passt die Farbe des Sliders (Daumen und Spur) an */
+        }
+        /* Für Browser, die accent-color nicht vollständig unterstützen (WebKit für Track) */
+        input[type=range]::-webkit-slider-runnable-track {
+            background: #dee2e6; /* Hintergrund der Spur */
+            height: 8px;
+            border-radius: 4px;
+        }
+        input[type=range]::-moz-range-track {
+            background: #dee2e6;
+            height: 8px;
+            border-radius: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Standard-Aussehen entfernen */
+            appearance: none;
+            width: 20px; /* Größe des Daumens */
+            height: 20px;
+            background: #007bff; /* Farbe des Daumens */
+            border-radius: 50%;
+            margin-top: -6px; /* Vertikale Zentrierung des Daumens auf der Spur */
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #007bff;
+            border-radius: 50%;
+            border: none; /* Wichtig für Firefox */
+        }
+
+
+        /* Styling für Dropdown-Listen */
+        .dropdown-element {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 1em;
+            color: #495057;
+            appearance: none; /* Entfernt Standard-Pfeil für eigenes Styling, optional */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.9z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            padding-right: 30px; /* Platz für den Pfeil */
+        }
+
+        /* Styling für Datumsauswahl */
+        .date-element {
+            width: auto; /* Passt sich der Inhaltsbreite an, oder spezifische Breite setzen */
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #495057;
+        }
+
+
+/* NEU: Styling für Tab-Navigation */
+.tab-navigation {
+    display: flex;
+    flex-wrap: wrap; /* Umbruch bei vielen Tabs */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #dee2e6; /* Linie unter den Tabs */
+}
+
+.tab-link {
+    padding: 10px 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #fafbfc; /*transparent;*/ /* Transparent, da Linie unten ist */
+    color: #495057; /* Standard Tab-Farbe */
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-right: 5px; /* Kleiner Abstand zwischen Tabs */
+    border-radius: 6px 6px 0 0; /* Obere Ecken abrunden */
+    transition: background-color 0.3s, color 0.3s;
+    border-bottom: 2px solid transparent; /* Platzhalter für aktive Linie */
+    margin-bottom: -2px; /* Um die untere Linie des Wrappers zu überlappen */
+}
+
+.tab-link:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
+}
+
+.tab-link.active {
+    background-color: #ffffff; /* Hintergrund für aktiven Tab */
+    color: #007bff; /* Hauptakzentfarbe für aktiven Tab */
+    border-color: #dee2e6 #dee2e6 #ffffff #dee2e6; /* Rahmen für aktiven Tab, untere Linie weiß */
+    border-style: solid;
+    border-width: 2px 2px 0 2px; /* Obere und seitliche Rahmen */
+}
+
+.tab-content {
+    display: none; /* Alle Tab-Inhalte standardmäßig ausblenden */
+    animation: fadeInEffect 0.5s; /* Sanfter Fade-In Effekt */
+}
+
+.tab-content.active {
+    display: block; /* Nur den aktiven Tab-Inhalt anzeigen */
+}
+
+@keyframes fadeInEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* CSS für .parameter-group, falls noch nicht vorhanden oder zur Anpassung */
+.parameter-group {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f1f3f5; /* Dezente Trennlinie zwischen Parametergruppen */
+}
+.parameter-group:last-child {
+    border-bottom: none;
+}
+
+/* Anpassung Slider-Wert Anzeige */
+#kind_alter_wert {
+    font-weight: bold;
+    color: #007bff;
+    display: inline-block;
+    min-width: 25px; /* Damit es nicht springt */
+    text-align: left;
+}
+
+/* style.css - Ergänzungen/Anpassungen für den Ergebnisbereich */
+
+/* Allgemeiner Container für das Ergebnis eines Absatzes */
+.tab-ergebnis-container {
+    padding: 20px; /* Etwas mehr Innenabstand für den gesamten Ergebnisblock */
+    line-height: 1.7;  /* Etwas größere Zeilenhöhe für bessere Lesbarkeit des Fließtextes */
+}
+
+.tab-ergebnis-container h2 { /* Überschrift "Ergebnis (Absatz)" */
+    margin-bottom: 20px; /* Mehr Abstand nach der Hauptüberschrift */
+}
+
+.tab-ergebnis-container h3 { /* Überschrift "Entscheidung:" */
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-size: 1.15em; /* Etwas größer, falls gewünscht */
+}
+
+/* Spezifische Anpassungen für den Begründungscontainer, falls vorhanden (basierend auf JS-Logik) */
+/* Wenn der .begruendungContainer direkt im .tab-ergebnis-container liegt: */
+.tab-ergebnis-container div { /* Gilt für den .begruendungContainer und andere divs */
+    margin-bottom: 15px; /* Abstand zwischen Textblöcken */
+}
+
+/* Styling für die Pro/Contra-Liste (ul) innerhalb des Ergebnisbereichs */
+.tab-ergebnis-container .tab-procontra-container ul, /* Falls die Struktur so ist */
+.tab-ergebnis-container ul { /* Allgemeiner für ULs im Ergebnisbereich */
+    list-style-position: outside; /* Stellt sicher, dass die Bullets außerhalb des Textflusses sind */
+    padding-left: 30px;      /* Mehr Einzug für die gesamte Liste, damit Bullets nicht am Rand kleben */
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.tab-ergebnis-container .tab-procontra-container ul li,
+.tab-ergebnis-container ul li {
+    margin-bottom: 10px; /* Mehr Abstand zwischen den einzelnen Listenpunkten */
+    padding-left: 5px;  /* Kleiner zusätzlicher Abstand zwischen Bullet und Textbeginn */
+    line-height: 1.6;   /* Zeilenhöhe für längere Listenpunkte anpassen */
+}
+
+
+
+/* Textblöcke innerhalb der Begründung (z.B. für Einleitung, spezifische Ergänzung, Abschluss) */
+.tab-ergebnis-container .text-block { /* Klasse ggf. im JS vergeben */
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.tab-ergebnis-container .text-block h4 {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333; /* Etwas dunkler für bessere Lesbarkeit der Zwischenüberschriften */
+}
+
+/* Paragraphen im Ergebnisbereich für gute Lesbarkeit */
+.tab-ergebnis-container p {
+    margin-bottom: 12px; /* Guter Abstand zwischen Paragraphen */
+}
+
+/* Horizontale Linie (hr), falls verwendet */
+.tab-ergebnis-container hr {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+/* style.css - Anpassungen für Ergebnisliste mit Symbolen */
+
+/* === BEGINN: ERGEBNISLISTE MIT SYMBOLEN === */
+
+/* Die UL-Liste, die die Pro/Contra Punkte enthält */
+.tab-ergebnis-container .pro-contra-list ul {
+    list-style-type: none !important; /* Entfernt Standard-Listenpunkte */
+    padding-left: 5px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Einzelne Listeneinträge (Begründungspunkte) */
+.tab-ergebnis-container .pro-contra-list ul li, .tab-ergebnis-container ul li {
+    list-style-type: none;
+    margin-bottom: 12px;
+    padding-left: 30px;   /* Platz für das Symbol */
+    position: relative;   /* Wichtig für Symbol-Positionierung */
+    line-height: 1.65;
+    border-radius: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-right: 10px;
+}
+
+/* Positive Punkte (grüner Haken) */
+.tab-ergebnis-container .pro-contra-list ul li.pro, .tab-ergebnis-container ul li.pro {
+    background-color: #e6ffed;
+    border-left: 4px solid #28a745;
+    color: #155724;
+}
+
+.tab-ergebnis-container .pro-contra-list ul li.pro::before, .tab-ergebnis-container ul li.pro::before {
+    content: '✔';
+    color: #28a745;
+    font-weight: bold;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1em;
+}
+
+/* Negative Punkte (rotes Kreuz) */
+.tab-ergebnis-container .pro-contra-list ul li.contra, .tab-ergebnis-container ul li.contra {
+    background-color: #fdecea;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+.tab-ergebnis-container .pro-contra-list ul li.contra::before, .tab-ergebnis-container ul li.contra::before {
+    content: '✘';
+    color: #dc3545;
+    font-weight: bold;
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1em;
+}
+/* === ENDE: ERGEBNISLISTE MIT SYMBOLEN === */
+
+.parameter-group.parameter-unanswered .parameter-frage {
+    color: red;
+    font-weight: bold;
+}
+.parameter-group.parameter-unanswered {
+    border-left: 3px solid red;
+    padding-left: 10px;
+}
+
+
+.parameter-group.simona-hidden {
+    display: none;
+}
+
+
+.tab-conclusive-hinweis-container {
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.tab-conclusive-hinweis-container.negativ-blockierend {
+    background-color: #f8d7da; /* Hellrot */
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.tab-conclusive-hinweis-container.positiv-abschliessend {
+    background-color: #d4edda; /* Hellgrün */
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+
+/* In style.css */
+#paragraph-info-box-container {
+    border-top: 2px solid #007bff; /* Blaue Akzentlinie oben */
+    padding-top: 20px;
+}
+
+#paragraph-info-box-container h3 { /* Für die Paragraphenbezeichnung */
+    color: #0056b3;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+}
+
+#paragraph-info-box-container h4 { /* Für Zwischenüberschriften wie "Beschreibung:" oder "Gesetzestext:" */
+    color: #343a40;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#paragraph-info-box-container p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+#paragraph-info-box-container pre {
+    background-color: #e9ecef;
+    color: #212529;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 400px; /* Ggf. anpassen */
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    font-size: 0.95em;
+}
+
+/* Stil für den "Denk"-Indikator */
+.simona-thinking-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px; /* Etwas Padding */
+    text-align: center;
+    min-height: 100px; /* Mindesthöhe, damit es nicht zu gedrungen wirkt */
+}
+
+.thinking-orb {
+    width: 28px; /* Größe des Orbs */
+    height: 28px;
+    background-color: #007bff; /* SimONA-Blau */
+    border-radius: 50%;
+    margin-bottom: 12px;
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); /* Leichter Schein */
+    animation: pulse-orb-animation 1.5s infinite ease-in-out; /* Animation anwenden */
+}
+
+.simona-thinking-indicator p {
+    color: #0056b3; /* Dunkleres Blau für den Text */
+    font-style: italic;
+    font-size: 0.95em;
+}
+
+/* CSS Keyframe-Animation für das Pulsieren */
+@keyframes pulse-orb-animation {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.7;
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 25px rgba(0, 123, 255, 0.6);
+    }
+    100% {
+        transform: scale(0.9);
+        opacity: 0.7;
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+    }
+}
+
+/* In style.css, am Ende der Datei hinzufügen */
+
+/* --- Layout für Übersicht-Tab (2-spaltig) --- */
+.overview-container {
+    display: flex;
+    gap: 30px; /* Abstand zwischen den Spalten */
+    width: 100%;
+}
+
+.overview-left-panel {
+    flex: 2; /* Linke Spalte nimmt 2/3 des Raums */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Abstand zwischen Elementen in der linken Spalte */
+}
+
+.overview-right-panel {
+    flex: 1; /* Rechte Spalte nimmt 1/3 des Raums */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Abstand zwischen Widgets in der rechten Spalte */
+}
+
+/* --- Allgemeines Styling für Widgets --- */
+.widget-container h3 {
+    font-size: 1.1em;
+    color: #0056b3;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.widget-content {
+    width: 100%;
+    /* Weitere Stile für den Widget-Inhalt hier */
+}
+
+/* Responsive Anpassung für kleinere Bildschirme */
+@media (max-width: 1024px) {
+    .overview-container {
+        flex-direction: column; /* Spalten untereinander anordnen */
+    }
+    .overview-left-panel, .overview-right-panel {
+        flex: none; 
+        width: 100%;
+    }
+}
+
+/* --- NEUE STILE FÜR QA-TAB --- */
+#tab-qa .panel-section h3 {
+    border-bottom: 2px solid #6c757d;
+}
+
+#tab-qa .panel-section h4 {
+    font-size: 1.1em;
+    color: #343a40;
+    margin-bottom: 10px;
+}

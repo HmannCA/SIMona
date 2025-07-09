@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimONA Prompt Assembler</title>
+    <link rel="stylesheet" href="assembler.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SimONA Prompt Assembler</h1>
+
+        <div class="step-section">
+            <h3>Schritt 0: Basisinformationen zur Normeinheit</h3>
+            <label for="gesetz">Gesetz/Verordnung (Abkürzung):</label>
+            <input type="text" id="gesetz" value="" placeholder="JuSchG">
+
+            <label for="paragraph">Paragraph (z.B. "4"):</label>
+            <input type="text" id="paragraph" value="" placeholder="4">
+
+            <label for="absatz">Absatz (z.B. "3"):</label>
+            <input type="text" id="absatz" value="" placeholder="3">
+
+
+	    <label for="satz">Satz (z.B. "1-2", leer lassen wenn nicht zutreffend):</label>
+            <input type="text" id="satz" value="">
+
+            <label for="analyseVariante">Analyse-Varianten-Kennung:</label>
+            <input type="text" id="analyseVariante" value="GeminiPro_v1" placeholder="Eindeutige Kennung, z.B. GeminiPro_v1">
+
+            <label for="quelleUrl">Quelle-URL:</label>
+            <input type="text" id="quelleUrl" value="" placeholder="https://www.gesetze-im-internet.de/juschg/__4.html">
+
+
+            <label for="normtext">Exakter Wortlaut des zu analysierenden Normteils (oder des gesamten Paragraphen):</label>
+            <textarea id="normtext" placeholder="(3) Abweichend von Absatz 1 darf Kindern und Jugendlichen der Aufenthalt in Gaststätten, die als Nachtbar oder Nachtclub geführt werden, und in vergleichbaren Vergnügungsbetrieben nicht gestattet werden."></textarea>
+            
+            <div>
+              <button onclick="generateSimulationsEinheitID()">SimulationsEinheit_ID generieren</button>
+              <button onclick="clearAllTextareasAndSuggestions()" style="margin-left: 10px; background-color: #e74c3c;">Analyse zurücksetzen</button> 
+            </div>
+            <div class="id-display">Generierte SimulationsEinheit_ID: <span id="simulationsEinheitIDDisplay"></span></div>
+        </div>
+
+	<div id="paragraph-analysis-section" class="step-section">
+    <h3>Schritt 0.5: Paragraphen-Analyse (Optional)</h3>
+    <p class="info">Wenn Sie im Feld oben den gesamten Text eines Paragraphen (inkl. Überschriften) eingefügt haben, klicken Sie hier, um ihn automatisch in seine Metadaten und Absätze zu zerlegen.</p>
+    <button onclick="showPrompt('SimONA_P0_5_ParagraphAnalyse')">Paragraphen aufteilen & analysieren</button>
+    
+    <div id="SimONA_P0_5_ParagraphAnalyse_output_area" class="prompt-output-area" style="display:none;">
+        
+        <label for="SimONA_P0_5_ParagraphAnalyse_prompt">Generierter Prompt:</label>
+        <button class="copy-button" onclick="copyToClipboard('SimONA_P0_5_ParagraphAnalyse_prompt', this)">Kopieren</button>
+        <textarea id="SimONA_P0_5_ParagraphAnalyse_prompt" readonly></textarea>
+        <label for="SimONA_P0_5_ParagraphAnalyse_response">KI-Antwort (JSON):</label>
+        <textarea id="SimONA_P0_5_ParagraphAnalyse_response" placeholder="JSON-Antwort der KI für die Paragraphen-Analyse hier einfügen..."></textarea>
+    </div>
+
+    <div id="absatz-selection-area" style="margin-top: 15px;">
+        </div>
+</div>
+
+        <div class="step-section">
+            <h3>Schritt 1: SimONA_Priming_Systemanweisung (Prompt 0)</h3>
+            <p class="info">Dies ist der globale Priming-Prompt, der einmalig zu Beginn einer KI-Sitzung verwendet werden sollte.</p>
+            <button onclick="showPrompt('SimONA_Priming_Systemanweisung')">Zeige Priming Prompt</button>
+            <div id="SimONA_Priming_Systemanweisung_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_Priming_Systemanweisung_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_Priming_Systemanweisung_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_Priming_Systemanweisung_prompt" readonly></textarea>
+            </div>
+        </div>
+        
+        <div class="step-section">
+            <h3>Schritt 2: SimONA_P1_EinheitMetadaten</h3>
+            <button onclick="showPrompt('SimONA_P1_EinheitMetadaten')">Generiere Prompt für EinheitMetadaten</button>
+            <div id="SimONA_P1_EinheitMetadaten_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P1_EinheitMetadaten_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P1_EinheitMetadaten_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P1_EinheitMetadaten_prompt" readonly></textarea>
+                <label for="SimONA_P1_EinheitMetadaten_response">KI-Antwort (JSON):</label>
+                <textarea id="SimONA_P1_EinheitMetadaten_response" placeholder="JSON-Antwort der KI hier einfügen..."></textarea>
+            </div>
+        </div>
+        
+        <div class="step-section">
+            <h3>Schritt 3: SimONA_P2_ParameterExtraktion</h3>
+            <button onclick="showPrompt('SimONA_P2_ParameterExtraktion')">Generiere Prompt für ParameterExtraktion</button>
+            <div id="SimONA_P2_ParameterExtraktion_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P2_ParameterExtraktion_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P2_ParameterExtraktion_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P2_ParameterExtraktion_prompt" readonly></textarea>
+                <label for="SimONA_P2_ParameterExtraktion_response">KI-Antwort (JSON-Array):</label>
+                <textarea id="SimONA_P2_ParameterExtraktion_response" placeholder="JSON-Array der Parameter-Objekte hier einfügen..."></textarea>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>Schritt 3.5: SimONA_P2.7_ParameterKonklusionDetail</h3>
+            <p class="info">Analysiert die in P2 erstellten Parameter auf abschließende oder blockierende Antwortmöglichkeiten.</p>
+            <button onclick="showPrompt('SimONA_P2_7_ParameterKonklusionDetail')">Generiere Prompt für Konklusionsdetails</button>
+            <div id="SimONA_P2_7_ParameterKonklusionDetail_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P2_7_ParameterKonklusionDetail_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P2_7_ParameterKonklusionDetail_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P2_7_ParameterKonklusionDetail_prompt" readonly></textarea>
+                <label for="SimONA_P2_7_ParameterKonklusionDetail_response">KI-Antwort (JSON-Array):</label>
+                <textarea id="SimONA_P2_7_ParameterKonklusionDetail_response" placeholder="JSON-Array der Konklusions-Objekte hier einfügen..."></textarea>
+                <button onclick="mergeP2_7Data()">P2.7-Daten mit P2-Parametern verbinden</button> 
+            </div>
+        </div>
+        
+        <div class="step-section">
+            <h3>Schritt 4: SimONA_P2.5_ErgebnisProfilVorschlaege</h3>
+            <button onclick="showPrompt('SimONA_P2_5_ErgebnisProfilVorschlaege')">Generiere Prompt für ErgebnisProfilVorschläge</button>
+            <div id="SimONA_P2_5_ErgebnisProfilVorschlaege_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P2_5_ErgebnisProfilVorschlaege_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P2_5_ErgebnisProfilVorschlaege_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P2_5_ErgebnisProfilVorschlaege_prompt" readonly></textarea>
+                <label for="SimONA_P2_5_ErgebnisProfilVorschlaege_response">KI-Antwort (JSON-Array der Vorschläge):</label>
+                <textarea id="SimONA_P2_5_ErgebnisProfilVorschlaege_response" placeholder="JSON-Array der ErgebnisProfil-Vorschläge hier einfügen..."></textarea>
+                <button onclick="displayAndPrepareP2_5Suggestions()">KI-Vorschläge anzeigen & bearbeiten</button>
+                <div id="p2_5_suggestions_editor_area" style="margin-top: 15px;"></div>
+                <button id="addNewSuggestionButton" onclick="addNewSuggestionInterface()" style="margin-top: 15px; background-color: #1abc9c; display:none;">Neuen ErgebnisProfil-Vorschlag hinzufügen</button>
+                <div id="p2_5_add_new_suggestion_area" style="margin-top: 10px; display:none;">
+                    <h4>Neuen Vorschlag erstellen:</h4>
+                    <label for="new_suggestion_id">Vorgeschlagene ID (darf editiert werden):</label>
+                    <input type="text" id="new_suggestion_id">
+                    <label for="new_suggestion_desc">Vorgeschlagene Beschreibung:</label>
+                    <textarea id="new_suggestion_desc" rows="2"></textarea>
+                    <button onclick="saveNewSuggestion()">Neuen Vorschlag speichern</button>
+                    <button onclick="cancelNewSuggestion()">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-section">
+            <h3>Schritt 5: SimONA_P3_RegelGenerierung</h3>
+            <button onclick="showPrompt('SimONA_P3_RegelGenerierung')">Generiere Prompt für RegelGenerierung</button>
+            <div id="SimONA_P3_RegelGenerierung_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P3_RegelGenerierung_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P3_RegelGenerierung_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P3_RegelGenerierung_prompt" readonly></textarea>
+                <label for="SimONA_P3_RegelGenerierung_response">KI-Antwort (JSON-Array):</label>
+                <textarea id="SimONA_P3_RegelGenerierung_response" placeholder="JSON-Array der Regel-Objekte hier einfügen..."></textarea>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>Schritt 6: SimONA_P4_ErgebnisProfilDetails</h3>
+             <p class="info">Dieser Prompt verwendet die in P3 von der KI erstellten Regeln (oder die validierten Vorschläge aus P2.5), um die Liste der zu definierenden Ergebnisprofile zu bestimmen.</p>
+            <button onclick="showPrompt('SimONA_P4_ErgebnisProfilDetails')">Generiere Prompt für ErgebnisProfilDetails</button>
+            <div id="SimONA_P4_ErgebnisProfilDetails_output_area" class="prompt-output-area" style="display:none;">
+                <label for="SimONA_P4_ErgebnisProfilDetails_prompt">Generierter Prompt:</label>
+                <button class="copy-button" onclick="copyToClipboard('SimONA_P4_ErgebnisProfilDetails_prompt', this)">Kopieren</button>
+                <textarea id="SimONA_P4_ErgebnisProfilDetails_prompt" readonly></textarea>
+                <label for="SimONA_P4_ErgebnisProfilDetails_response">KI-Antwort (JSON-Array):</label>
+                <textarea id="SimONA_P4_ErgebnisProfilDetails_response" placeholder="JSON-Array der detaillierten ErgebnisProfile hier einfügen..."></textarea>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>Schritt 7: SQL-Gesamtausgabe</h3>
+            <p class="info">Hier werden alle generierten SQL-Befehle in der korrekten Reihenfolge für die Datenbankeingabe gesammelt.</p>
+            <button class="sql-button" onclick="generateAllSql()">Alle SQL-Befehle generieren</button>
+            <button class="copy-button" onclick="copyToClipboard('gesamtesSqlOutput', this)">Gesamtes SQL kopieren</button>
+            <button onclick="clearSqlOutput()">SQL-Ausgabe leeren</button>
+            <label for="gesamtesSqlOutput">Generierte SQL-Befehle:</label>
+            <textarea id="gesamtesSqlOutput" readonly rows="20" placeholder="Hier erscheinen die gesammelten SQL-Befehle..."></textarea>
+        </div>
+	<div id="navigation-footer" class="step-section" style="text-align: center; display: none; background-color: #e9ecef;">
+            <button id="next-step-button" onclick="scrollToNextStep()">Nächsten Absatz analysieren</button>
+        </div>
+
+    </div>
+
+    <script src="simona_prompts.js"></script>
+    <script src="assembler.js"></script>
+</body>
+</html>

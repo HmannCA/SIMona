@@ -1,0 +1,338 @@
+2025-06-07 09:36:39 - =================================================
+2025-06-07 09:36:39 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:36:39 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:36:39 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:36:39 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:36:39 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:36:39 - =================================================
+
+2025-06-07 09:41:13 - =================================================
+2025-06-07 09:41:13 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:41:13 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:41:13 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:41:13 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:41:13 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:41:13 - =================================================
+
+2025-06-07 09:41:31 - =================================================
+2025-06-07 09:41:31 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:41:31 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:41:31 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:41:31 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:41:31 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:41:31 - =================================================
+
+2025-06-07 09:41:51 - =================================================
+2025-06-07 09:41:51 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:41:51 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:41:51 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:41:51 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:41:51 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:41:51 - =================================================
+
+2025-06-07 09:47:15 - =================================================
+2025-06-07 09:47:15 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:47:15 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:47:15 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:47:15 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:47:15 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:47:15 - =================================================
+
+2025-06-07 09:47:39 - =================================================
+2025-06-07 09:47:39 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:47:39 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:47:39 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:47:39 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:47:39 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:47:39 - =================================================
+
+2025-06-07 09:51:18 - =================================================
+2025-06-07 09:51:18 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:51:18 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1_S12__v_GeminiPro_v1
+2025-06-07 09:51:18 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1_S12__v_GeminiPro_v1
+2025-06-07 09:51:18 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 2
+2025-06-07 09:51:18 - Verarbeite AuditID: 3
+2025-06-07 09:51:18 - Verarbeite AuditID: 2
+2025-06-07 09:51:18 - Skript-Ausführung beendet. Sende 2 Audit(s) als JSON.
+2025-06-07 09:51:18 - =================================================
+
+2025-06-07 09:51:45 - =================================================
+2025-06-07 09:51:45 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:51:45 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:51:45 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:51:45 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:51:45 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:51:45 - =================================================
+
+2025-06-07 09:51:55 - =================================================
+2025-06-07 09:51:55 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:51:55 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1_S12__v_GeminiPro_v1
+2025-06-07 09:51:55 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1_S12__v_GeminiPro_v1
+2025-06-07 09:51:55 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 2
+2025-06-07 09:51:55 - Verarbeite AuditID: 3
+2025-06-07 09:51:55 - Verarbeite AuditID: 2
+2025-06-07 09:51:55 - Skript-Ausführung beendet. Sende 2 Audit(s) als JSON.
+2025-06-07 09:51:55 - =================================================
+
+2025-06-07 09:55:05 - =================================================
+2025-06-07 09:55:05 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:55:05 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:55:05 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:55:05 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID = ? ORDER BY Audit_Timestamp DESC
+2025-06-07 09:55:05 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 09:55:05 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 09:55:05 - =================================================
+
+2025-06-07 09:57:25 - =================================================
+2025-06-07 09:57:25 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:57:25 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:57:25 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 09:57:25 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID = 'SE_BGB_116_Abs1' ORDER BY Audit_Timestamp DESC
+2025-06-07 09:58:16 - =================================================
+2025-06-07 09:58:16 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 09:58:16 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 09:58:16 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 10:01:56 - =================================================
+2025-06-07 10:01:56 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:01:56 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:01:56 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 10:02:46 - =================================================
+2025-06-07 10:02:46 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:02:46 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:02:46 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 10:04:58 - =================================================
+2025-06-07 10:04:58 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:04:58 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:04:58 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 10:04:58 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID = ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:04:58 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 10:04:58 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 10:04:58 - =================================================
+
+2025-06-07 10:06:07 - =================================================
+2025-06-07 10:06:07 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:06:07 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:06:07 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1
+2025-06-07 10:06:07 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID = ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:07:59 - =================================================
+2025-06-07 10:07:59 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:07:59 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:07:59 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1%
+2025-06-07 10:07:59 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:07:59 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 2
+2025-06-07 10:07:59 - Verarbeite AuditID: 3
+2025-06-07 10:07:59 - Verarbeite AuditID: 2
+2025-06-07 10:07:59 - Skript-Ausführung beendet. Sende 2 Audit(s) als JSON.
+2025-06-07 10:07:59 - =================================================
+
+2025-06-07 10:14:21 - =================================================
+2025-06-07 10:14:21 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:14:21 - Empfangener GET-Parameter 'einheit_id': SE_BGB_116_Abs1
+2025-06-07 10:14:21 - Getrimmte 'einheit_id' für die Abfrage: SE_BGB_116_Abs1%
+2025-06-07 10:14:21 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:14:21 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 3
+2025-06-07 10:14:21 - Verarbeite AuditID: 4
+2025-06-07 10:14:21 - Verarbeite AuditID: 3
+2025-06-07 10:14:21 - Verarbeite AuditID: 2
+2025-06-07 10:14:21 - Skript-Ausführung beendet. Sende 3 Audit(s) als JSON.
+2025-06-07 10:14:21 - =================================================
+
+2025-06-07 10:15:52 - =================================================
+2025-06-07 10:15:52 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:15:52 - Empfangener GET-Parameter 'einheit_id': SE_SGB2_7_Abs1
+2025-06-07 10:15:52 - Getrimmte 'einheit_id' für die Abfrage: SE_SGB2_7_Abs1%
+2025-06-07 10:15:52 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:15:52 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-06-07 10:15:52 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-06-07 10:15:52 - =================================================
+
+2025-06-07 10:24:09 - =================================================
+2025-06-07 10:24:09 - Skript get_audits.php wurde aufgerufen.
+2025-06-07 10:24:09 - Empfangener GET-Parameter 'einheit_id': SE_SGB2_7_Abs1
+2025-06-07 10:24:09 - Getrimmte 'einheit_id' für die Abfrage: SE_SGB2_7_Abs1%
+2025-06-07 10:24:09 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-06-07 10:24:09 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-06-07 10:24:09 - Verarbeite AuditID: 5
+2025-06-07 10:24:09 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-06-07 10:24:09 - =================================================
+
+2025-07-07 16:08:43 - =================================================
+2025-07-07 16:08:43 - Skript get_audits.php wurde aufgerufen.
+2025-07-07 16:08:43 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-07 16:08:43 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-07 16:08:43 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-07 16:08:43 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-07 16:08:43 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-07 16:08:43 - =================================================
+
+2025-07-08 05:20:10 - =================================================
+2025-07-08 05:20:10 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:20:10 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-08 05:20:10 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-08 05:20:10 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:20:10 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:20:10 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:20:10 - =================================================
+
+2025-07-08 05:20:25 - =================================================
+2025-07-08 05:20:25 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:20:25 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_4_Abs1
+2025-07-08 05:20:25 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_4_Abs1%
+2025-07-08 05:20:25 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:20:25 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:20:25 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:20:25 - =================================================
+
+2025-07-08 05:20:41 - =================================================
+2025-07-08 05:20:41 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:20:41 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_5_Abs1
+2025-07-08 05:20:41 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_5_Abs1%
+2025-07-08 05:20:41 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:20:41 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:20:41 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:20:41 - =================================================
+
+2025-07-08 05:20:47 - =================================================
+2025-07-08 05:20:47 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:20:47 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_6_Abs1
+2025-07-08 05:20:47 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_6_Abs1%
+2025-07-08 05:20:47 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:20:47 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:20:47 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:20:47 - =================================================
+
+2025-07-08 05:20:57 - =================================================
+2025-07-08 05:20:57 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:20:57 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_6_Abs1
+2025-07-08 05:20:57 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_6_Abs1%
+2025-07-08 05:20:57 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:20:57 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:20:57 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:20:57 - =================================================
+
+2025-07-08 05:21:02 - =================================================
+2025-07-08 05:21:02 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:21:02 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_6_Abs1
+2025-07-08 05:21:02 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_6_Abs1%
+2025-07-08 05:21:02 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:21:02 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:21:02 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:21:02 - =================================================
+
+2025-07-08 05:21:10 - =================================================
+2025-07-08 05:21:10 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:21:10 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_8_Abs1__v_GeminiPro_preview
+2025-07-08 05:21:10 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_8_Abs1__v_GeminiPro_preview%
+2025-07-08 05:21:10 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:21:10 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:21:10 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:21:10 - =================================================
+
+2025-07-08 05:21:42 - =================================================
+2025-07-08 05:21:42 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:21:42 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_10a_Abs1__v_GeminiPro_preview
+2025-07-08 05:21:42 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_10a_Abs1__v_GeminiPro_preview%
+2025-07-08 05:21:42 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:21:43 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:21:43 - Verarbeite AuditID: 1
+2025-07-08 05:21:43 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:21:43 - =================================================
+
+2025-07-08 05:22:38 - =================================================
+2025-07-08 05:22:38 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:22:38 - Empfangener GET-Parameter 'einheit_id': SE_SGB2_7_Abs1
+2025-07-08 05:22:38 - Getrimmte 'einheit_id' für die Abfrage: SE_SGB2_7_Abs1%
+2025-07-08 05:22:38 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:22:38 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:22:38 - Verarbeite AuditID: 5
+2025-07-08 05:22:38 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:22:38 - =================================================
+
+2025-07-08 05:22:59 - =================================================
+2025-07-08 05:22:59 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:22:59 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-08 05:22:59 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-08 05:22:59 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:22:59 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:22:59 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:22:59 - =================================================
+
+2025-07-08 05:25:57 - =================================================
+2025-07-08 05:25:57 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:25:57 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-08 05:25:57 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-08 05:25:57 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:25:57 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:25:57 - Verarbeite AuditID: 6
+2025-07-08 05:25:57 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:25:57 - =================================================
+
+2025-07-08 05:34:05 - =================================================
+2025-07-08 05:34:05 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:34:05 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-08 05:34:05 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-08 05:34:05 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:34:05 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:34:05 - Verarbeite AuditID: 6
+2025-07-08 05:34:05 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:34:05 - =================================================
+
+2025-07-08 05:36:22 - =================================================
+2025-07-08 05:36:22 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:36:22 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_10a_Abs1__v_GeminiPro_preview
+2025-07-08 05:36:22 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_10a_Abs1__v_GeminiPro_preview%
+2025-07-08 05:36:22 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:36:22 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:36:22 - Verarbeite AuditID: 1
+2025-07-08 05:36:22 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:36:22 - =================================================
+
+2025-07-08 05:38:58 - =================================================
+2025-07-08 05:38:58 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:38:58 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_10a_Abs1__v_GeminiPro_preview
+2025-07-08 05:38:58 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_10a_Abs1__v_GeminiPro_preview%
+2025-07-08 05:38:58 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:38:58 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:38:58 - Verarbeite AuditID: 1
+2025-07-08 05:38:58 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:38:58 - =================================================
+
+2025-07-08 05:40:00 - =================================================
+2025-07-08 05:40:00 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:40:00 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_10a_Abs1__v_GeminiPro_preview
+2025-07-08 05:40:00 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_10a_Abs1__v_GeminiPro_preview%
+2025-07-08 05:40:00 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:40:00 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:40:00 - Verarbeite AuditID: 1
+2025-07-08 05:40:00 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:40:00 - =================================================
+
+2025-07-08 05:40:41 - =================================================
+2025-07-08 05:40:41 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:40:41 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_4_Abs1
+2025-07-08 05:40:41 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_4_Abs1%
+2025-07-08 05:40:41 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:40:41 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 0
+2025-07-08 05:40:41 - Skript-Ausführung beendet. Sende 0 Audit(s) als JSON.
+2025-07-08 05:40:41 - =================================================
+
+2025-07-08 05:43:16 - =================================================
+2025-07-08 05:43:16 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 05:43:16 - Empfangener GET-Parameter 'einheit_id': SE_JUSCHG_4_Abs1
+2025-07-08 05:43:16 - Getrimmte 'einheit_id' für die Abfrage: SE_JUSCHG_4_Abs1%
+2025-07-08 05:43:16 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 05:43:16 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 05:43:16 - Verarbeite AuditID: 9
+2025-07-08 05:43:16 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 05:43:16 - =================================================
+
+2025-07-08 08:37:41 - =================================================
+2025-07-08 08:37:41 - Skript get_audits.php wurde aufgerufen.
+2025-07-08 08:37:41 - Empfangener GET-Parameter 'einheit_id': SE_AUFENTHG_32_Abs1
+2025-07-08 08:37:41 - Getrimmte 'einheit_id' für die Abfrage: SE_AUFENTHG_32_Abs1%
+2025-07-08 08:37:41 - SQL-Statement: SELECT AuditID, FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit, P5_Prompt_Text, P5_Response_JSON FROM QualitaetsAudits WHERE FK_Einheit_ID LIKE ? ORDER BY Audit_Timestamp DESC
+2025-07-08 08:37:41 - Kopf-Query ausgeführt. Anzahl gefundener Zeilen: 1
+2025-07-08 08:37:41 - Verarbeite AuditID: 6
+2025-07-08 08:37:41 - Skript-Ausführung beendet. Sende 1 Audit(s) als JSON.
+2025-07-08 08:37:41 - =================================================
+

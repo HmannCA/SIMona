@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimONA Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <header>
+            <h1>SimONA - Simulation</h1>
+        </header>
+
+        <nav class="tab-navigation">
+            <button class="tab-link active" data-tab="tab-overview">Übersicht & Einstieg</button>
+            <button class="tab-link" data-tab="tab-qa" style="display:none;">Qualitätssicherung</button>
+            <button class="tab-link" data-tab="tab-result">Gesamtergebnis</button>
+        </nav>
+
+        <div class="tab-content-area">
+            
+            <div id="tab-overview" class="tab-content active">
+                <div class="overview-container">
+                    <div class="overview-left-panel">
+                        
+                        <div class="norm-selection-area panel-section">
+                            <h2>Rechtsnorm auswählen</h2>
+                            <p>Bitte wählen Sie das gewünschte Gesetzbuch und den Paragraphen aus, den Sie simulieren möchten.</p>
+                            <div class="selection-controls">
+                                <div>
+                                    <label for="select-gesetzbuch">Gesetzbuch:</label>
+                                    <select id="select-gesetzbuch" class="dropdown-element">
+                                        <option value="">-- Bitte Gesetzbuch wählen --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="select-paragraph">Paragraph:</label>
+                                    <select id="select-paragraph" class="dropdown-element" disabled>
+                                        <option value="">-- Erst Gesetzbuch wählen --</option>
+                                    </select>
+                                </div>
+                                <button id="btn-norm-laden" class="action-buttons" disabled>Ausgewählte Norm laden</button>
+                            </div>
+                        </div>
+
+                        <div id="variant-selection-container" class="panel-section" style="display: none;">
+                            </div>
+
+                        <div id="paragraph-info-box-container" class="panel-section" style="display: none;">
+                            </div>
+
+                    </div>
+
+                    <div class="overview-right-panel">
+                        
+                        <div id="widget-norm-stats" class="widget-container panel-section" style="display:none;">
+                            <h3>Widget: Statistik zum Paragraphen</h3>
+                            <div class="widget-content">
+                                <canvas id="normStatsChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-qa" class="tab-content">
+                </div>
+
+            <div id="tab-result" class="tab-content">
+                 <div class="main-simulation-area">
+                    <div class="left-panel">
+                        <div class="panel-section norm-info tab-norm-info-container">
+                            <h2>Gesamtergebnis der Simulation</h2>
+                            <p>Die Zusammenfassung über alle Absätze wird hier angezeigt.</p>
+                        </div>
+                    </div>
+                    <div class="right-panel tab-right-panel-container">
+                    </div>
+                </div>
+            </div> 
+            
+            <script src="simona-ui.js?v=1.1"></script>
+    <script src="script.js?v=1.1"></script>
+</body>
+</html>
