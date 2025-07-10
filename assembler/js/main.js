@@ -94,6 +94,27 @@ function generateSimulationsEinheitID() {
 
 function showPrompt(promptName) {
     console.log("showPrompt aufgerufen für:", promptName);
+    
+    // Spezialbehandlung für P1 bei Folgeabsätzen
+    if (promptName === 'SimONA_P1_EinheitMetadaten') {
+        const p1Data = SimONAState.methods.getResponse('p1');
+        if (p1Data) {
+            // P1 bereits vorhanden - nur anzeigen
+            const outputArea = document.getElementById(promptName + '_output_area');
+            if (outputArea) {
+                outputArea.style.display = 'block';
+                // Response Textarea readonly machen
+                const responseTextarea = document.getElementById(promptName + '_response');
+                if (responseTextarea) {
+                    responseTextarea.readOnly = true;
+                    responseTextarea.style.backgroundColor = '#f0f0f0';
+                }
+            }
+            return;
+        }
+    }
+    
+    // Normale Verarbeitung für alle anderen Fälle
     const promptText = assemblePromptText(promptName);
     if (promptText) {
         const promptTextarea = document.getElementById(promptName + '_prompt');
@@ -114,7 +135,14 @@ function assemblePromptText(promptName) {
     const absatzNum = getInputValue("absatz") || "1";
     const satzNum = getInputValue("satz");
     const quelleUrl = getInputValue("quelle") || "Keine URL angegeben";
-    const normtextAuszug = getInputValue("normtext");
+    
+    // KORREKTUR: Für P0.5 das richtige Feld verwenden
+    let normtextAuszug;
+    if (promptName === 'SimONA_P0_5_ParagraphAnalyse') {
+        normtextAuszug = getInputValue("vollstaendigerParagraphentext");
+    } else {
+        normtextAuszug = getInputValue("normtext");
+    }
     
     let normteilBezeichnung = `§ ${paragraphNum}`;
     if (absatzNum) normteilBezeichnung += ` Abs. ${absatzNum}`;
@@ -135,8 +163,15 @@ function preparePromptWithReplacements(promptName, gesetzAbk, normteilBezeichnun
         return null;
     }
     
-    if (!normtextAuszug && !['SimONA_Priming_Systemanweisung'].includes(promptName)) {
+    // KORREKTUR: P0.5 zur Ausnahmeliste hinzufügen
+    if (!normtextAuszug && !['SimONA_Priming_Systemanweisung', 'SimONA_P0_5_ParagraphAnalyse'].includes(promptName)) {
         alert("Bitte den 'Exakter Wortlaut des zu analysierenden Normteils' eingeben.");
+        return null;
+    }
+    
+    // Spezielle Validierung für P0.5
+    if (promptName === 'SimONA_P0_5_ParagraphAnalyse' && !normtextAuszug) {
+        alert("Bitte den vollständigen Paragraphentext (inkl. Überschriften) eingeben.");
         return null;
     }
 

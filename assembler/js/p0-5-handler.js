@@ -159,8 +159,55 @@ const P0_5Handler = {
         });
         SimONAState.methods.setResponse('p2_5', []);
         
-        // UI zurücksetzen
-        clearAllTextareasAndSuggestions();
+        // UI zurücksetzen - OHNE den kompletten State zu löschen
+        this.clearAnalysisUI();
+    },
+
+    /**
+     * Neue Funktion: Löscht nur die UI-Elemente der Analyse, nicht den State
+     */
+    clearAnalysisUI: function() {
+        // Prompt-Bereiche zurücksetzen
+        const promptPrefixes = [
+            'SimONA_P1_EinheitMetadaten',
+            'SimONA_P2_ParameterExtraktion', 
+            'SimONA_P2_7_ParameterKonklusionDetail',
+            'SimONA_P2_5_ErgebnisProfilVorschlaege',
+            'SimONA_P3_RegelGenerierung',
+            'SimONA_P4_ErgebnisProfilDetails',
+            'SimONA_P5_QualitaetsAudit'
+        ];
+
+        promptPrefixes.forEach(prefix => {
+            const outputArea = document.getElementById(`${prefix}_output_area`);
+            if (outputArea) outputArea.style.display = 'none';
+            
+            const promptTextarea = document.getElementById(`${prefix}_prompt`);
+            if (promptTextarea) promptTextarea.value = '';
+            
+            const responseTextarea = document.getElementById(`${prefix}_response`);
+            if (responseTextarea) responseTextarea.value = '';
+        });
+
+        // P2.5 Editor zurücksetzen
+        const suggestionsEditorArea = document.getElementById('p2_5_suggestions_editor_area');
+        if (suggestionsEditorArea) suggestionsEditorArea.innerHTML = '';
+        
+        const addNewSuggestionArea = document.getElementById('p2_5_add_new_suggestion_area');
+        if (addNewSuggestionArea) addNewSuggestionArea.style.display = 'none';
+
+        // SQL-Output leeren
+        const sqlOutput = document.getElementById('gesamtesSqlOutput');
+        if (sqlOutput) sqlOutput.value = '';
+
+        // Validierungsbericht zurücksetzen
+        const validationReport = document.getElementById('validation-report-area');
+        if (validationReport) {
+            validationReport.style.display = 'none';
+            validationReport.innerHTML = '';
+        }
+
+        console.log("Analyse-UI zurückgesetzt (State beibehalten).");
     },
     
     /**
