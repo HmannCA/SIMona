@@ -17,7 +17,16 @@ function generateSqlForP1Data() {
         return "";
     }
 
+    // Prompt-Version aus der ID extrahieren oder aktuell verwenden
+    let promptVersion = 'v1'; // Standard
+    if (einheitId.includes('__P')) {
+        promptVersion = einheitId.split('__P')[1].replace('_', '.');
+    } else if (typeof PromptManager !== 'undefined') {
+        promptVersion = PromptManager.getCurrentVersion().version;
+    }
+
     let sql = `-- SQL für SimulationsEinheiten und Regelwerke (basierend auf P1 Daten)\n`;
+    sql += `-- Prompt-Version: ${promptVersion}\n`;
     sql += `START TRANSACTION;\n\n`;
     
     // Mappe P1-Daten auf DB-Felder
@@ -26,7 +35,7 @@ function generateSqlForP1Data() {
         SimONAConfig.fieldMapping.p1ToDb
     );
     
-    // SimulationsEinheiten INSERT
+    // SimulationsEinheiten INSERT (ERWEITERT)
     sql += `INSERT INTO SimulationsEinheiten (\n`;
     sql += `  Einheit_ID,\n`;
     sql += `  Gesetz,\n`;
@@ -44,10 +53,11 @@ function generateSqlForP1Data() {
     sql += `  FK_Entscheidungsart_ID,\n`;
     sql += `  Ermessensleitlinien_Text,\n`;
     sql += `  Letzte_Aenderung_SimONA_Datum,\n`;
-    sql += `  Version_SimONA\n`;
+    sql += `  Version_SimONA,\n`;
+    sql += `  Prompt_Version\n`;  // NEUE SPALTE
     sql += `) VALUES (\n`;
     
-    // Werte einfügen
+    // Werte einfügen (ERWEITERT)
     sql += `  ${escapeSqlString(einheitId)},\n`;
     sql += `  ${escapeSqlString(mappedData.Gesetz || '')},\n`;
     sql += `  ${mappedData.Gesetz_Vollname ? escapeSqlString(mappedData.Gesetz_Vollname) : 'NULL'},\n`;
@@ -71,14 +81,15 @@ function generateSqlForP1Data() {
     
     sql += `  ${mappedData.Ermessensleitlinien_Text ? escapeSqlString(mappedData.Ermessensleitlinien_Text) : 'NULL'},\n`;
     sql += `  CURDATE(),\n`;
-    sql += `  ${escapeSqlString(SimONAConfig.version)}\n`;
+    sql += `  ${escapeSqlString(SimONAConfig.version)},\n`;
+    sql += `  ${escapeSqlString(promptVersion)}\n`;  // NEUE SPALTE
     sql += `);\n\n`;
     
-    // Regelwerke INSERT
+    // Regelwerke INSERT (unverändert)
     sql += `INSERT INTO Regelwerke (Regelwerk_ID, FK_Einheit_ID, Beschreibung) VALUES (\n`;
     sql += `  ${escapeSqlString(einheitId)},\n`;
     sql += `  ${escapeSqlString(einheitId)},\n`;
-    sql += `  ${escapeSqlString(`Regelwerk für ${mappedData.Kurzbeschreibung || einheitId}`)}\n`;
+    sql += `  ${escapeSqlString(`Regelwerk für ${mappedData.Kurzbeschreibung || einheitId} (Prompt ${promptVersion})`)}\n`;
     sql += `);\n\n`;
     
     sql += `COMMIT;\n`;
@@ -202,4 +213,33 @@ function generateSqlForP2Data() {
     
     sql += `COMMIT;\n`;
     return sql;
+}
+
+/**
+ * Hilfsfunktion: Prompt-Version aus SimulationsEinheit_ID extrahieren
+ */
+function extractPromptVersionFromId(einheitId) {
+    if (!einheitId) return 'v1';
+    
+    if (einheitId.includes('__P')) {
+        return einheitId.split('__P')[1].replace('_', '.');
+    }
+    
+    return 'v1'; // Fallback für alte IDs ohne Prompt-Version
+}
+
+/**
+ * Erweiterte Funktion für Versions-Vergleich
+ */
+function generateVersionComparisonReport() {
+    // Diese Funktion könnte später für direkten Vergleich verwendet werden
+    const einheitId = SimONAState.currentSimulationsEinheitID;
+    if (!einheitId) return;
+    
+    const baseId = einheitId.split('__P')[0]; // Basis-ID ohne Prompt-Version
+    const currentVersion = extractPromptVersionFromId(einheitId);
+    
+    console.log(`Basis-ID: ${baseId}`);
+    console.log(`Aktuelle Prompt-Version: ${currentVersion}`);
+    console.log("Für Versions-Vergleich könnten hier andere Versionen abgefragt werden.");
 }

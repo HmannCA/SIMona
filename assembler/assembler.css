@@ -168,16 +168,67 @@
 	    margin-top: 10px;
 	}
 
-/* --- NEUE STILE FÜR STATUS-BANNER --- */
-#status-banner {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-align: center;
-    display: none; /* Standardmäßig ausgeblendet */
-    background-color: #eafaf1;
-    color: #1d6a4a;
-    border: 1px solid #a3e9c5;
-}
+    /* --- NEUE STILE FÜR STATUS-BANNER --- */
+    #status-banner {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+        text-align: center;
+        display: none; /* Standardmäßig ausgeblendet */
+        background-color: #eafaf1;
+        color: #1d6a4a;
+        border: 1px solid #a3e9c5;
+    }
+
+    /* Prompt-Versions-Selektor Styles */
+    #prompt-version-selector {
+        margin-bottom: 20px;
+    }
+
+    #prompt-version-selector input[type="radio"] {
+        margin-right: 8px;
+        transform: scale(1.2);
+    }
+
+    #prompt-version-selector label {
+        cursor: pointer;
+        padding: 5px 0;
+        display: inline-block;
+        transition: color 0.2s ease;
+    }
+
+    #prompt-version-selector label:hover {
+        color: #2980b9;
+    }
+
+    #prompt-version-selector .version-info {
+        background-color: #f8f9fa;
+        border-left: 3px solid #3498db;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 0.9em;
+    }
+
+    /* Warnung für Versionswechsel */
+    .prompt-version-warning {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+        font-size: 0.9em;
+    }
+
+    /* Debug-Button für Prompts */
+    .prompt-debug-button {
+        background-color: #95a5a6;
+        font-size: 0.8em;
+        padding: 5px 10px;
+    }
+
+    .prompt-debug-button:hover {
+        background-color: #7f8c8d;
+    }

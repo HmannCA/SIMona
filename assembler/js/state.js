@@ -23,7 +23,8 @@ const SimONAState = {
         analysierteAbsatzIndizes: new Set(),
         currentStep: 0,
         isLoading: false,
-        lastError: null
+        lastError: null,
+        selectedPromptVersion: 'v1' // Aktuelle Prompt-Version
     },
     
     // Methoden zur State-Verwaltung

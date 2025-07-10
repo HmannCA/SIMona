@@ -58,10 +58,13 @@ function clearSqlOutput() {
 }
 
 // ========================================
-// SimulationsEinheit ID Management
+// Erweiterte SimulationsEinheit ID Management mit Prompt-Versionen
 // ========================================
 
-function generateSimulationsEinheitID() {
+/**
+ * Generiert eine SimulationsEinheit_ID inklusive Prompt-Version
+ */
+function generateSimulationsEinheitID(promptVersion = null) {
     const gesetz = getInputValue("gesetz");
     const paragraph = getInputValue("paragraph");
     const absatz = getInputValue("absatz");
@@ -78,14 +81,191 @@ function generateSimulationsEinheitID() {
         document.getElementById('analyseVariante').value = varianteSafe;
     }
 
+    // Prompt-Version bestimmen
+    let currentPromptVersion = promptVersion;
+    if (!currentPromptVersion && typeof PromptManager !== 'undefined') {
+        currentPromptVersion = PromptManager.getCurrentVersion().version;
+    }
+    if (!currentPromptVersion) {
+        currentPromptVersion = 'v1';
+    }
+
+    // ID zusammenbauen
     let id = `SE_${gesetz}_${paragraph}`;
     if (absatz) id += `_Abs${absatz}`;
     if (satz) id += `_S${satz}`;
     id += `__v_${varianteSafe}`;
+    id += `__P${currentPromptVersion.replace('.', '_')}`; // v2.5 wird zu P2_5
 
     SimONAState.methods.setSimulationsEinheitID(id);
     document.getElementById("simulationsEinheitIDDisplay").textContent = id;
+    
+    // Prüfe auf existierende Versionen
+    checkExistingVersions(gesetz, paragraph, absatz, satz, varianteSafe);
+    
     console.log("Neue SimulationsEinheit_ID generiert:", id);
+}
+
+/**
+ * Prüft und zeigt existierende Prompt-Versionen an
+ */
+function checkExistingVersions(gesetz, paragraph, absatz, satz, variante) {
+    // Diese Funktion würde normalerweise eine DB-Abfrage machen
+    // Für jetzt simulieren wir es mit localStorage oder zeigen nur Info
+    
+    const basePattern = `SE_${gesetz}_${paragraph}`;
+    const fullPattern = basePattern + (absatz ? `_Abs${absatz}` : '') + (satz ? `_S${satz}` : '') + `__v_${variante}`;
+    
+    // Simuliere existierende Versionen (später echte DB-Abfrage)
+    const mockExistingVersions = [
+        // Diese würden aus der DB kommen
+        // `${fullPattern}__Pv1`,
+        // `${fullPattern}__Pv2_5`
+    ];
+    
+    displayVersionManagement(fullPattern, mockExistingVersions);
+}
+
+/**
+ * Zeigt das Versions-Management Interface
+ */
+function displayVersionManagement(baseId, existingVersions) {
+    let versionContainer = document.getElementById('version-management-container');
+    
+    if (!versionContainer) {
+        // Container erstellen wenn nicht vorhanden
+        const step0 = document.getElementById('step-0');
+        versionContainer = document.createElement('div');
+        versionContainer.id = 'version-management-container';
+        versionContainer.className = 'step-section';
+        versionContainer.style.cssText = 'background-color: #f0f8ff; border-left: 4px solid #4169e1;';
+        step0.parentNode.insertBefore(versionContainer, step0.nextSibling);
+    }
+    
+    let html = '<h3 style="color: #4169e1; margin-top: 0;">🔄 Prompt-Versions-Management</h3>';
+    
+    if (existingVersions.length > 0) {
+        html += '<p><strong>Existierende Versionen für diesen Paragraphen:</strong></p>';
+        html += '<ul>';
+        existingVersions.forEach(version => {
+            const promptVersion = version.split('__P')[1]?.replace('_', '.');
+            html += `<li>${version} <em>(Prompt ${promptVersion})</em> 
+                     <button onclick="loadExistingVersion('${version}')" style="margin-left: 10px; font-size: 0.8em;">Laden</button>
+                     </li>`;
+        });
+        html += '</ul>';
+        
+        html += `<div style="margin: 15px 0; padding: 10px; background-color: #fff3cd; border-radius: 4px;">
+            <strong>⚠️ Hinweis:</strong> Sie können eine neue Prompt-Version erstellen oder eine bestehende überschreiben.
+        </div>`;
+    } else {
+        html += '<p style="color: #666;">Noch keine Versionen für diesen Paragraphen vorhanden.</p>';
+    }
+    
+    // Aktuelle Prompt-Version anzeigen
+    const currentPromptVersion = typeof PromptManager !== 'undefined' ? 
+        PromptManager.getCurrentVersion().version : 'v1';
+    
+    html += `<div style="margin-top: 15px; padding: 10px; background-color: #e8f5e9; border-radius: 4px;">
+        <strong>Aktuelle Konfiguration:</strong><br>
+        📝 Prompt-Version: <strong>${currentPromptVersion}</strong><br>
+        🆔 Generierte ID: <strong>${SimONAState.currentSimulationsEinheitID}</strong>
+    </div>`;
+    
+    // Action-Buttons
+    html += `<div style="margin-top: 15px;">
+        <button onclick="proceedWithCurrentVersion()" style="background-color: #28a745; margin-right: 10px;">
+            ✅ Mit aktueller Konfiguration fortfahren
+        </button>
+        <button onclick="showVersionSelector()" style="background-color: #17a2b8;">
+            🔄 Andere Version laden/erstellen
+        </button>
+    </div>`;
+    
+    versionContainer.innerHTML = html;
+    versionContainer.style.display = 'block';
+}
+
+/**
+ * Lädt eine existierende Version
+ */
+function loadExistingVersion(versionId) {
+    // Hier würde normalerweise die komplette Analyse aus der DB geladen
+    alert(`Funktion zum Laden von "${versionId}" wird implementiert.\n\nDies würde alle P1-P4 Daten aus der Datenbank laden.`);
+    
+    // Setze die ID
+    SimONAState.methods.setSimulationsEinheitID(versionId);
+    document.getElementById("simulationsEinheitIDDisplay").textContent = versionId;
+    
+    // TODO: Hier echte DB-Abfrage implementieren
+    // loadAnalysisDataFromDatabase(versionId);
+}
+
+/**
+ * Setzt mit der aktuellen Version fort
+ */
+function proceedWithCurrentVersion() {
+    document.getElementById('version-management-container').style.display = 'none';
+    console.log("Fortfahren mit:", SimONAState.currentSimulationsEinheitID);
+}
+
+/**
+ * Zeigt erweiterte Versions-Auswahl
+ */
+function showVersionSelector() {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+        z-index: 1000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background-color: white; padding: 20px; border-radius: 8px;
+        max-width: 500px; width: 90%;
+    `;
+    
+    content.innerHTML = `
+        <h3>Versions-Auswahl</h3>
+        <p>Wählen Sie, wie Sie fortfahren möchten:</p>
+        
+        <button onclick="createNewVersion(); this.parentElement.parentElement.remove();" 
+                style="width: 100%; margin: 5px 0; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px;">
+            🆕 Neue Prompt-Version erstellen
+        </button>
+        
+        <button onclick="overwriteExisting(); this.parentElement.parentElement.remove();" 
+                style="width: 100%; margin: 5px 0; padding: 10px; background-color: #ffc107; color: black; border: none; border-radius: 4px;">
+            📝 Bestehende Version überschreiben
+        </button>
+        
+        <button onclick="this.parentElement.parentElement.remove();" 
+                style="width: 100%; margin: 5px 0; padding: 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px;">
+            ❌ Abbrechen
+        </button>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+/**
+ * Erstellt eine neue Version
+ */
+function createNewVersion() {
+    // Neue ID mit aktueller Prompt-Version generieren
+    generateSimulationsEinheitID();
+    proceedWithCurrentVersion();
+}
+
+/**
+ * Überschreibt bestehende Version
+ */
+function overwriteExisting() {
+    if (confirm("Sind Sie sicher, dass Sie die bestehende Version überschreiben möchten?\n\nAlle vorherigen Daten gehen verloren!")) {
+        proceedWithCurrentVersion();
+    }
 }
 
 // ========================================
@@ -154,6 +334,10 @@ function assemblePromptText(promptName) {
     );
 }
 
+// ========================================
+// Erweiterte preparePromptWithReplacements Funktion
+// ========================================
+
 function preparePromptWithReplacements(promptName, gesetzAbk, normteilBezeichnung, quelleUrl, normtextAuszug, paragraphNum, absatzNum) {
     const einheitId = SimONAState.currentSimulationsEinheitID;
     
@@ -175,10 +359,17 @@ function preparePromptWithReplacements(promptName, gesetzAbk, normteilBezeichnun
         return null;
     }
 
+    // NEUE LOGIK: Prompt-Template aus der aktuell gewählten Version holen
     let template = promptTemplates[promptName];
     if (!template) {
         alert("Prompt-Vorlage nicht gefunden: " + promptName);
         return null;
+    }
+
+    // DEBUG: Info über verwendete Prompt-Version (nur in Console)
+    if (typeof PromptManager !== 'undefined') {
+        const versionInfo = PromptManager.getCurrentVersion();
+        console.log(`🔧 Prompt "${promptName}" generiert mit Version: ${versionInfo.version} (${versionInfo.name})`);
     }
 
     // Basis-Platzhalter ersetzen
@@ -269,6 +460,95 @@ function preparePromptWithReplacements(promptName, gesetzAbk, normteilBezeichnun
     
     return template;
 }
+
+// ========================================
+// Neue Debug- und Info-Funktionen
+// ========================================
+
+/**
+ * Zeigt Info über die aktuelle Prompt-Version
+ */
+function showPromptVersionInfo() {
+    if (typeof PromptManager !== 'undefined') {
+        const current = PromptManager.getCurrentVersion();
+        const available = PromptManager.getAvailableVersions();
+        
+        let infoMsg = `Aktuelle Prompt-Version: ${current.name} (${current.version})\n`;
+        infoMsg += `Beschreibung: ${current.description}\n\n`;
+        infoMsg += `Verfügbare Versionen: ${available.join(', ')}\n\n`;
+        infoMsg += `Geladene Prompt-Templates: ${Object.keys(promptTemplates).length}`;
+        
+        alert(infoMsg);
+    } else {
+        alert("PromptManager nicht verfügbar.");
+    }
+}
+
+/**
+ * Debug-Funktion für Prompt-System (mit UI-Feedback)
+ */
+function debugPromptSystem() {
+    console.log("=== Prompt-System Debug ===");
+    
+    let debugInfo = "=== PROMPT-SYSTEM DEBUG ===\n\n";
+    
+    if (typeof PromptManager !== 'undefined') {
+        PromptManager.debug(); // Console-Ausgabe
+        
+        const current = PromptManager.getCurrentVersion();
+        const available = PromptManager.getAvailableVersions();
+        
+        debugInfo += `Aktuelle Version: ${current.version} (${current.name})\n`;
+        debugInfo += `Verfügbare Versionen: ${available.join(', ')}\n`;
+        debugInfo += `Geladene Templates: ${Object.keys(promptTemplates || {}).length}\n`;
+        debugInfo += `Bereits generiert: ${PromptManager.hasGeneratedPrompts() ? 'Ja' : 'Nein'}\n\n`;
+    } else {
+        debugInfo += "PromptManager: NICHT VERFÜGBAR\n\n";
+        console.log("PromptManager nicht verfügbar");
+    }
+    
+    // State-Informationen
+    if (typeof SimONAState !== 'undefined') {
+        debugInfo += `SimONA State:\n`;
+        debugInfo += `- Einheit ID: ${SimONAState.currentSimulationsEinheitID || 'Nicht gesetzt'}\n`;
+        debugInfo += `- Prompt Version: ${SimONAState.ui?.selectedPromptVersion || 'Unbekannt'}\n`;
+        debugInfo += `- P1 Data: ${SimONAState.methods.getResponse('p1') ? 'Vorhanden' : 'Fehlt'}\n`;
+        debugInfo += `- P2 Data: ${SimONAState.methods.getResponse('p2') ? 'Vorhanden' : 'Fehlt'}\n`;
+        debugInfo += `- P3 Data: ${SimONAState.methods.getResponse('p3') ? 'Vorhanden' : 'Fehlt'}\n`;
+        debugInfo += `- P4 Data: ${SimONAState.methods.getResponse('p4') ? 'Vorhanden' : 'Fehlt'}\n\n`;
+    }
+    
+    // Prompt-Templates
+    debugInfo += `Template-Namen:\n${Object.keys(promptTemplates || {}).map(name => `- ${name}`).join('\n')}\n\n`;
+    
+    // Browser-Info
+    debugInfo += `Browser: ${navigator.userAgent.split(') ')[0]})\n`;
+    debugInfo += `Zeitpunkt: ${new Date().toLocaleString()}\n`;
+    
+    // Zeige Debug-Info sowohl in Console als auch als Alert
+    console.log("Globale promptTemplates:", Object.keys(promptTemplates || {}));
+    console.log("SimONA State UI:", SimONAState?.ui?.selectedPromptVersion);
+    
+    // UI-Feedback mit scrollbarem Alert
+    alert(debugInfo);
+    
+    // Zusätzlich: Kurzes visuelles Feedback am Button
+    const button = event.target;
+    const originalText = button.innerHTML;
+    const originalBg = button.style.backgroundColor;
+    
+    button.innerHTML = '✓ Debug-Info gezeigt';
+    button.style.backgroundColor = '#27ae60';
+    
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.backgroundColor = originalBg;
+    }, 2000);
+}
+
+// Globale Funktionen exportieren  
+window.showPromptVersionInfo = showPromptVersionInfo;
+window.debugPromptSystem = debugPromptSystem;
 
 // ========================================
 // UI-Hilfsfunktionen
@@ -427,8 +707,21 @@ function saveP5AuditResult() {
     const auditDate = new Date().toISOString();
     const einheitId = SimONAState.currentSimulationsEinheitID;
     
-    let sql = `-- SQL für QualitaetsAudit (basierend auf P5 Audit)\n`;
-    sql += `START TRANSACTION;\n\n`;
+    // Prüfe ob bereits SQL-Daten vorhanden sind
+    const existingSql = document.getElementById('gesamtesSqlOutput').value;
+    const hasExistingData = existingSql.includes('START TRANSACTION') && !existingSql.includes('COMMIT');
+    
+    let sql = '';
+    
+    if (!hasExistingData) {
+        // Wenn keine bestehende Transaktion, starte eine neue
+        sql += `-- SQL für QualitaetsAudit (eigenständige Transaktion)\n`;
+        sql += `START TRANSACTION;\n\n`;
+    } else {
+        // Wenn bestehende Transaktion vorhanden, füge nur Audit-Teil hinzu
+        sql += `-- SQL für QualitaetsAudit (Teil der bestehenden Transaktion)\n`;
+    }
+    
     sql += `INSERT INTO QualitaetsAudits (\n`;
     sql += `  FK_Einheit_ID, Audit_Timestamp, Gesamtscore, Gesamtfazit,\n`;
     sql += `  P5_Prompt_Text, P5_Response_JSON\n`;
@@ -441,22 +734,30 @@ function saveP5AuditResult() {
     sql += `  ${escapeSqlString(JSON.stringify(auditData))}\n`;
     sql += `);\n\n`;
     
-    // Detailbewertungen
-    const auditId = 'LAST_INSERT_ID()';
+    // Variable für AuditID setzen (phpMyAdmin-kompatibel)
+    sql += `SET @audit_id = LAST_INSERT_ID();\n\n`;
+    
+    // Alternative: Direkter SELECT für maximale Kompatibilität
+    sql += `-- Alternative für phpMyAdmin:\n`;
+    sql += `-- SET @audit_id = (SELECT MAX(AuditID) FROM QualitaetsAudits WHERE FK_Einheit_ID = ${escapeSqlString(einheitId)});\n\n`;
+    
+    // Detailbewertungen mit Variable
     if (auditData.Detailbewertungen && Array.isArray(auditData.Detailbewertungen)) {
         auditData.Detailbewertungen.forEach(detail => {
             sql += `INSERT INTO QualitaetsAudit_Detailbewertungen (\n`;
             sql += `  FK_AuditID, Kategorie, Score, Begruendung\n`;
             sql += `) VALUES (\n`;
-            sql += `  ${auditId},\n`;
+            sql += `  @audit_id,  -- Variable statt LAST_INSERT_ID()\n`;
             sql += `  ${escapeSqlString(detail.Kategorie || '')},\n`;
             sql += `  ${detail.Score || 'NULL'},\n`;
             sql += `  ${escapeSqlString(detail.Begruendung || '')}\n`;
             sql += `);\n`;
         });
+        sql += `\n`;
     }
     
-    sql += `\nCOMMIT;\n`;
+    // COMMIT nur wenn es eine eigenständige Transaktion ist
+    sql += `COMMIT;\n`;
 
     displayGeneratedSql(sql, 'gesamtesSqlOutput', true);
     alert("P5 Audit-Ergebnis wurde als SQL generiert und dem Gesamtausgabefeld hinzugefügt.");
@@ -497,6 +798,331 @@ function checkForAndLoadReAuditData() {
         }, 1000);
     }
 }
+
+// ========================================
+// Erweiterte Versions-Management Funktionen
+// ========================================
+
+/**
+ * Erweiterte generateSimulationsEinheitID mit Versions-Check
+ */
+function generateSimulationsEinheitIDWithVersionCheck() {
+    const gesetz = getInputValue("gesetz");
+    const paragraph = getInputValue("paragraph");
+    const absatz = getInputValue("absatz");
+    const satz = getInputValue("satz");
+    
+    if (!gesetz || !paragraph) {
+        alert("Bitte mindestens 'Gesetz/Verordnung' und 'Paragraph' eingeben.");
+        return;
+    }
+    
+    // Erst normale ID generieren
+    generateSimulationsEinheitID();
+    
+    // Dann Versions-Übersicht anzeigen
+    showVersionOverview(gesetz, paragraph, absatz, satz);
+}
+
+/**
+ * Zeigt Übersicht existierender Versionen
+ */
+function showVersionOverview(gesetz, paragraph, absatz, satz) {
+    // Mock-Daten für Demonstration (später echte DB-Abfrage)
+    const mockVersions = generateMockVersions(gesetz, paragraph, absatz, satz);
+    
+    const overviewDiv = document.getElementById('version-overview');
+    const listDiv = document.getElementById('existing-versions-list');
+    
+    if (mockVersions.length > 0) {
+        let html = '<h4>Gefundene Analysen:</h4>';
+        html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: center; font-weight: bold; padding: 10px; background-color: #e9ecef; margin-bottom: 10px;">';
+        html += '<div>Prompt-Version</div><div>Datum</div><div>Qualitäts-Score</div><div>Aktionen</div>';
+        html += '</div>';
+        
+        mockVersions.forEach(version => {
+            html += '<div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: center; padding: 8px; border-bottom: 1px solid #dee2e6;">';
+            html += `<div><span style="background-color: ${getVersionColor(version.promptVersion)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">${version.promptVersion}</span></div>`;
+            html += `<div style="font-size: 0.9em;">${version.created}</div>`;
+            html += `<div style="text-align: center;">`;
+            if (version.qualityScore) {
+                html += `<span style="color: ${getScoreColor(version.qualityScore)}; font-weight: bold;">${version.qualityScore}/10</span>`;
+            } else {
+                html += '<span style="color: #6c757d;">Kein Audit</span>';
+            }
+            html += `</div>`;
+            html += `<div>`;
+            html += `<button onclick="loadVersion('${version.id}')" style="font-size: 0.8em; margin-right: 5px; background-color: #28a745;">📂 Laden</button>`;
+            html += `<button onclick="showVersionDetails('${version.id}')" style="font-size: 0.8em; background-color: #17a2b8;">ℹ️ Details</button>`;
+            html += `</div>`;
+            html += '</div>';
+        });
+        
+        html += `<div style="margin-top: 15px; padding: 10px; background-color: #e3f2fd; border-radius: 4px;">
+            <strong>💡 Tipp:</strong> Sie können mehrere Prompt-Versionen parallel erstellen und später im Frontend vergleichen.
+        </div>`;
+        
+        listDiv.innerHTML = html;
+        overviewDiv.style.display = 'block';
+    } else {
+        listDiv.innerHTML = '<p style="color: #666; font-style: italic;">Noch keine Analysen für diesen Paragraphen vorhanden. Sie erstellen die erste Version!</p>';
+        overviewDiv.style.display = 'block';
+    }
+}
+
+/**
+ * Lädt eine existierende Version
+ */
+function loadVersion(versionId) {
+    if (!confirm(`Möchten Sie die Version "${versionId}" laden?\n\nDie aktuellen Daten gehen verloren.`)) {
+        return;
+    }
+    
+    // In einer echten Implementation würde hier eine API-Abfrage stattfinden
+    console.log(`Lade Version: ${versionId}`);
+    
+    // SimulationsEinheit_ID setzen
+    SimONAState.methods.setSimulationsEinheitID(versionId);
+    document.getElementById("simulationsEinheitIDDisplay").textContent = versionId;
+    
+    // Prompt-Version aus ID extrahieren und setzen
+    const promptVersion = extractPromptVersionFromId(versionId);
+    if (typeof PromptManager !== 'undefined') {
+        PromptManager.setVersion(promptVersion);
+    }
+    
+    // Mock: Lade gespeicherte Daten (später echte DB-Abfrage)
+    loadMockAnalysisData(versionId);
+    
+    alert(`Version "${versionId}" geladen!\n\nPrompt-Version: ${promptVersion}`);
+}
+
+/**
+ * Zeigt Details einer Version
+ */
+function showVersionDetails(versionId) {
+    // Mock-Details (später echte DB-Abfrage)
+    const details = getMockVersionDetails(versionId);
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+        z-index: 1000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background-color: white; padding: 20px; border-radius: 8px;
+        max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+    `;
+    
+    content.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">📋 Versions-Details</h3>
+            <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                    style="background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">
+                ✕
+            </button>
+        </div>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+            <strong>ID:</strong> ${details.id}<br>
+            <strong>Prompt-Version:</strong> <span style="background-color: ${getVersionColor(details.promptVersion)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.9em;">${details.promptVersion}</span><br>
+            <strong>Erstellt:</strong> ${details.created}<br>
+            <strong>Parameter:</strong> ${details.parameterCount}<br>
+            <strong>Regeln:</strong> ${details.rulesCount}<br>
+            <strong>Ergebnisprofile:</strong> ${details.profilesCount}
+        </div>
+        
+        ${details.qualityScore ? `
+            <div style="background-color: #e8f5e9; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+                <strong>🏆 Qualitäts-Audit:</strong><br>
+                <strong>Score:</strong> ${details.qualityScore}/10<br>
+                <strong>Fazit:</strong> ${details.qualityFazit}
+            </div>
+        ` : '<div style="background-color: #fff3cd; padding: 15px; border-radius: 4px; margin-bottom: 15px;"><em>Noch kein Qualitäts-Audit durchgeführt</em></div>'}
+        
+        <div style="text-align: center;">
+            <button onclick="loadVersion('${details.id}'); this.parentElement.parentElement.parentElement.remove();" 
+                    style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; margin-right: 10px;">
+                📂 Version laden
+            </button>
+            <button onclick="this.parentElement.parentElement.parentElement.remove();" 
+                    style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px;">
+                Schließen
+            </button>
+        </div>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+/**
+ * Aktualisiert die Versions-Übersicht
+ */
+function refreshVersionOverview() {
+    const gesetz = getInputValue("gesetz");
+    const paragraph = getInputValue("paragraph");
+    const absatz = getInputValue("absatz");
+    const satz = getInputValue("satz");
+    
+    if (!gesetz || !paragraph) {
+        alert("Bitte erst Gesetz und Paragraph eingeben.");
+        return;
+    }
+    
+    showVersionOverview(gesetz, paragraph, absatz, satz);
+}
+
+/**
+ * Startet Versions-Vergleich
+ */
+function compareVersions() {
+    const modal = document.getElementById('version-comparison-modal');
+    const content = document.getElementById('version-comparison-content');
+    
+    // Mock-Vergleich (später echte Implementation)
+    const gesetz = getInputValue("gesetz");
+    const paragraph = getInputValue("paragraph");
+    const mockVersions = generateMockVersions(gesetz, paragraph);
+    
+    if (mockVersions.length < 2) {
+        alert("Mindestens 2 Versionen erforderlich für Vergleich.");
+        return;
+    }
+    
+    let html = '<h4>Vergleich verfügbarer Versionen:</h4>';
+    html += '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+    html += '<tr style="background-color: #f8f9fa;"><th style="padding: 8px; border: 1px solid #dee2e6;">Aspekt</th>';
+    
+    mockVersions.forEach(version => {
+        html += `<th style="padding: 8px; border: 1px solid #dee2e6;">${version.promptVersion}</th>`;
+    });
+    html += '</tr>';
+    
+    const aspects = ['Parameter-Anzahl', 'Regel-Anzahl', 'Qualitäts-Score', 'Erstellungs-Datum'];
+    aspects.forEach(aspect => {
+        html += `<tr><td style="padding: 8px; border: 1px solid #dee2e6; font-weight: bold;">${aspect}</td>`;
+        mockVersions.forEach(version => {
+            let value = '';
+            switch(aspect) {
+                case 'Parameter-Anzahl': value = version.parameterCount; break;
+                case 'Regel-Anzahl': value = version.rulesCount; break;
+                case 'Qualitäts-Score': value = version.qualityScore ? `${version.qualityScore}/10` : 'N/A'; break;
+                case 'Erstellungs-Datum': value = version.created; break;
+            }
+            html += `<td style="padding: 8px; border: 1px solid #dee2e6;">${value}</td>`;
+        });
+        html += '</tr>';
+    });
+    html += '</table>';
+    
+    html += `<div style="margin-top: 20px; padding: 15px; background-color: #e3f2fd; border-radius: 4px;">
+        <strong>💡 Empfehlung:</strong> Nutzen Sie die Version mit dem höchsten Qualitäts-Score für die Produktion.
+    </div>`;
+    
+    content.innerHTML = html;
+    modal.style.display = 'flex';
+}
+
+/**
+ * Schließt Versions-Vergleich
+ */
+function closeVersionComparison() {
+    document.getElementById('version-comparison-modal').style.display = 'none';
+}
+
+// ========================================
+// Hilfsfunktionen und Mock-Daten
+// ========================================
+
+/**
+ * Generiert Mock-Versionen für Demonstration
+ */
+function generateMockVersions(gesetz, paragraph, absatz, satz) {
+    const baseId = `SE_${gesetz}_${paragraph}` + (absatz ? `_Abs${absatz}` : '') + (satz ? `_S${satz}` : '') + '__v_Standard';
+    
+    // Mock-Daten (später aus echter DB)
+    return [
+        {
+            id: `${baseId}__Pv1`,
+            promptVersion: 'v1.3',
+            created: '2025-01-08 14:30',
+            parameterCount: 2,
+            rulesCount: 3,
+            profilesCount: 3,
+            qualityScore: 8.5,
+            qualityFazit: 'Gute Qualität, aber einige Optimierungen möglich'
+        },
+        {
+            id: `${baseId}__Pv2_5`,
+            promptVersion: 'v2.5',
+            created: '2025-01-09 16:45',
+            parameterCount: 3,
+            rulesCount: 4,
+            profilesCount: 4,
+            qualityScore: 9.2,
+            qualityFazit: 'Exzellente Qualität mit vollständiger Abdeckung'
+        }
+    ];
+}
+
+/**
+ * Holt Mock-Details für eine Version
+ */
+function getMockVersionDetails(versionId) {
+    const promptVersion = extractPromptVersionFromId(versionId);
+    return {
+        id: versionId,
+        promptVersion: promptVersion,
+        created: '2025-01-09 16:45',
+        parameterCount: promptVersion === 'v2.5' ? 3 : 2,
+        rulesCount: promptVersion === 'v2.5' ? 4 : 3,
+        profilesCount: promptVersion === 'v2.5' ? 4 : 3,
+        qualityScore: promptVersion === 'v2.5' ? 9.2 : 8.5,
+        qualityFazit: promptVersion === 'v2.5' ? 
+            'Exzellente Qualität mit vollständiger Abdeckung' : 
+            'Gute Qualität, aber einige Optimierungen möglich'
+    };
+}
+
+/**
+ * Lädt Mock-Analysedaten
+ */
+function loadMockAnalysisData(versionId) {
+    // Hier würden normalerweise alle P1-P4 Daten aus der DB geladen
+    console.log(`Mock: Lade Analysedaten für ${versionId}`);
+    // TODO: Echte Implementation mit API-Calls
+}
+
+/**
+ * Hilfsfunktionen für Farben
+ */
+function getVersionColor(version) {
+    switch(version) {
+        case 'v1': case 'v1.3': return '#6c757d';
+        case 'v2.5': return '#007bff';
+        case 'v3.0': return '#28a745';
+        default: return '#6f42c1';
+    }
+}
+
+function getScoreColor(score) {
+    if (score >= 9) return '#28a745';
+    if (score >= 7) return '#ffc107';
+    if (score >= 5) return '#fd7e14';
+    return '#dc3545';
+}
+
+// Globale Funktionen exportieren
+window.generateSimulationsEinheitIDWithVersionCheck = generateSimulationsEinheitIDWithVersionCheck;
+window.loadVersion = loadVersion;
+window.showVersionDetails = showVersionDetails;
+window.refreshVersionOverview = refreshVersionOverview;
+window.compareVersions = compareVersions;
+window.closeVersionComparison = closeVersionComparison;
 
 // ========================================
 // Initialisierung

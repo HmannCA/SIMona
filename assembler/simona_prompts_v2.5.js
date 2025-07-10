@@ -2,7 +2,7 @@
 // Version: 2.6 - Optimiert für vollständige Rechtsanalyse
 // Die JSON-Strukturen bleiben identisch, nur die Anweisungen werden verbessert
 
-const promptTemplates = {
+const promptTemplatesV2_5 = {
     SimONA_Priming_Systemanweisung: `Du bist eine hochspezialisierte KI zur präzisen Analyse deutscher Rechtsnormen für das SimONA-System. Deine Aufgabe ist es, für alle spezifischen Analyse-Prompts (wie SimONA_P1_EinheitMetadaten, SimONA_P2_ParameterExtraktion, etc.), die dir nach dieser Systemanweisung folgen, die angeforderten Informationen ausschließlich aus dem dir primär übergebenen Gesetzestext-Auszug zu extrahieren und als reinen JSON-String zurückzugeben.
 
 WICHTIGSTE ANWEISUNG FÜR ALLE DEINE ANTWORTEN AUF NACHFOLGENDE ANALYSE-PROMPTS:
@@ -336,6 +336,10 @@ Führe ein systematisches Audit durch mit Fokus auf:
 2. KORREKTHEIT: Stimmen die rechtlichen Interpretationen?
 3. LOGIK: Sind die Regeln widerspruchsfrei und decken alle Fälle ab?
 4. PRAXISTAUGLICHKEIT: Kann ein Verwaltungsmitarbeiter damit arbeiten?
+
+Beachte, dass bei diesem Audit ausschließlich die Analyse des explizit angeführten Teils der Rechtsnorm, in der Regel eine Absatz, bewertet werden soll. 
+Alle anderen Absätze des Paragrafen werden separat bewertet und erst danach einer Gesamtbetrachtung unterworfen und gemeinsam bewertet.
+
 
 KRITISCHE PRÜFPUNKTE:
 - Fehlen Tatbestandsmerkmale oder wurden welche falsch interpretiert?

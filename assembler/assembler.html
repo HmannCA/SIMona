@@ -244,6 +244,85 @@
         <h1>SimONA Prompt Assembler v2.5</h1>
         
         <div id="status-banner"></div>
+
+        <!-- Prompt-Versions-Auswahl -->
+        <div id="prompt-version-selector" class="step-section" style="background-color: #e8f4f8; border-left: 4px solid #3498db;">
+            <h3 style="color: #2980b9; margin-top: 0;">📝 Prompt-Version auswählen</h3>
+            <p style="margin-bottom: 15px;">Wählen Sie die Prompt-Variante für die KI-Analyse:</p>
+            
+            <div style="margin-bottom: 10px;">
+                <input type="radio" id="prompt_v1" name="promptVersion" value="v1" checked style="margin-right: 8px; vertical-align: middle;">
+                <label for="prompt_v1" style="font-weight: normal; display: inline-block; vertical-align: middle; cursor: pointer;">
+                    <strong>Standard (v1.3)</strong> - Bewährte Prompt-Variante
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+                <input type="radio" id="prompt_v2_5" name="promptVersion" value="v2.5" style="margin-right: 8px; vertical-align: middle;">
+                <label for="prompt_v2_5" style="font-weight: normal; display: inline-block; vertical-align: middle; cursor: pointer;">
+                    <strong>Optimiert (v2.5)</strong> - Erweiterte Analyse mit Vollständigkeitsprüfung
+                </label>
+            </div>
+            
+            <div style="margin-top: 15px; padding: 10px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+                <small>
+                    <strong>Hinweis:</strong> Die Prompt-Version beeinflusst die Qualität und den Detailgrad der KI-Analyse. 
+                    v2.5 führt exhaustive Analysen durch, benötigt aber leistungsfähigere KI-Modelle.
+                </small>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <button onclick="showPromptVersionInfo()" style="background-color: #95a5a6; font-size: 0.9em;">
+                    ℹ️ Aktuelle Version anzeigen
+                </button>
+                <button onclick="debugPromptSystem()" style="background-color: #95a5a6; font-size: 0.9em; margin-left: 10px;">
+                    🔍 Debug Prompt-System
+                </button>
+            </div>
+        </div>
+
+        <!-- Versions-Management (nach dem Prompt-Selektor einfügen) -->
+        <div id="version-overview" class="step-section" style="background-color: #f8f9fa; border-left: 4px solid #6c757d; display: none;">
+            <h3 style="color: #495057; margin-top: 0;">📊 Vorhandene Analysen dieses Paragraphen</h3>
+            
+            <div id="existing-versions-list">
+                <!-- Wird dynamisch gefüllt -->
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <button onclick="refreshVersionOverview()" style="background-color: #6c757d; font-size: 0.9em;">
+                    🔄 Aktualisieren
+                </button>
+                <button onclick="compareVersions()" style="background-color: #17a2b8; font-size: 0.9em; margin-left: 10px;">
+                    ⚖️ Versionen vergleichen
+                </button>
+            </div>
+        </div>
+
+        <!-- Versions-Vergleich Modal (versteckt) -->
+        <div id="version-comparison-modal" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center;
+            z-index: 1000;">
+            <div style="
+                background-color: white; padding: 20px; border-radius: 8px;
+                max-width: 90%; max-height: 90%; overflow-y: auto;
+                width: 800px;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">📊 Versions-Vergleich</h3>
+                    <button onclick="closeVersionComparison()" style="
+                        background: #e74c3c; color: white; border: none; 
+                        padding: 5px 10px; cursor: pointer; border-radius: 4px;">
+                        ✕ Schließen
+                    </button>
+                </div>
+                
+                <div id="version-comparison-content">
+                    <!-- Wird dynamisch gefüllt -->
+                </div>
+            </div>
+        </div>
         
         <div id="step-0" class="step-section">
             <h2>Schritt 0: Grunddaten eingeben</h2>
@@ -271,7 +350,7 @@
                 <label for="quelle">Quelle/URL (optional):</label>
                 <input type="url" id="quelle" placeholder="https://www.gesetze-im-internet.de/...">
             </div>
-            <button onclick="generateSimulationsEinheitID()">SimulationsEinheit_ID generieren</button>
+            <button onclick="generateSimulationsEinheitIDWithVersionCheck()">SimulationsEinheit_ID generieren & Versionen prüfen</button>
             <p>Generierte ID: <span id="simulationsEinheitIDDisplay">Noch nicht generiert</span></p>
         </div>
 
@@ -431,6 +510,8 @@
     <script src="js/event-listeners.js?v=2.5"></script>
     <script src="js/audit-system.js?v=2.5"></script>
     <script src="simona_prompts.js?v=1.3"></script>
+    <script src="simona_prompts_v2.5.js?v=2.5"></script>
+    <script src="js/prompt-manager.js?v=2.5"></script>
     <script src="js/main.js?v=2.5"></script>
 </body>
 </html>

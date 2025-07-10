@@ -292,8 +292,9 @@ VOM EXPERTEN ERSTELLTES UND VALIDERTES DATENMODELL (JSON):
 // =================================================================
 BEWERTUNGSGRUNDSÄTZE FÜR DEIN AUDIT:
 1.  Fokus auf Substanz, nicht auf Stil: Bewerte primär die fachliche Korrektheit und den Sinngehalt, nicht die exakte Wortwahl.
-2.  Semantische Äquivalenz akzeptieren: Leichte Abweichungen in der Formulierung von Fragetexten oder Beschreibungen sind völlig akzeptabel, solange der juristische Kern und der Zweck für den Anwender unmissverständlich und korrekt getroffen werden. Betreibe keine "Wortklauberei". Eine Frage wie "Liegt eine unmittelbare Gefahr vor?" ist semantisch gleichwertig zu "Besteht eine unmittelbare Gefahr für das Kindeswohl?" und sollte nicht negativ bewertet werden, solange der Kontext klar ist.
-3.  Kritik an materiellen Fehlern: Konzentriere deine Kritik und negative Bewertungen auf materielle Fehler. Das sind:
+2.  Beachte, dass bei diesem Audit ausschließlich die Analyse des explizit angeführten Teils der Rechtsnorm, in der Regel eine Absatz, bewertet werden soll. Alle anderen Absätze des Paragrafen werden separat bewertet und erst danach einer Gesamtbetrachtung unterworfen und gemeinsam bewertet.
+3.  Semantische Äquivalenz akzeptieren: Leichte Abweichungen in der Formulierung von Fragetexten oder Beschreibungen sind völlig akzeptabel, solange der juristische Kern und der Zweck für den Anwender unmissverständlich und korrekt getroffen werden. Betreibe keine "Wortklauberei". Eine Frage wie "Liegt eine unmittelbare Gefahr vor?" ist semantisch gleichwertig zu "Besteht eine unmittelbare Gefahr für das Kindeswohl?" und sollte nicht negativ bewertet werden, solange der Kontext klar ist.
+4.  Kritik an materiellen Fehlern: Konzentriere deine Kritik und negative Bewertungen auf materielle Fehler. Das sind:
     * Fehlende oder falsch interpretierte Tatbestandsmerkmale.
     * Falsche logische Verknüpfungen in den Regeln.
     * Fachlich irreführende oder mehrdeutige Formulierungen, die zu einer falschen Anwendung durch einen Sachbearbeiter führen könnten.
