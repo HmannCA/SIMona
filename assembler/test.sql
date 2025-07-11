@@ -617,7 +617,7 @@ WICHTIG: Deine Bewertung soll streng, fair und konstruktiv sein, basierend auf d
 INSERT INTO QualitaetsAudit_Detailbewertungen (
   FK_AuditID, Kategorie, Score, Begruendung
 ) VALUES (
-  LAST_INSERT_ID(),
+  14,
   'Vollständigkeit der Parameter',
   5,
   'Die drei Hauptvoraussetzungen für die Haftanordnung sind korrekt erfasst (Zurückweisungsentscheidung, keine unmittelbare Vollzugsmöglichkeit, Haftgrund nach § 62 Abs. 4). Jedoch fehlt die äußerst wichtige Regelung aus Satz 3 vollständig: ''In den Fällen, in denen der Richter die Anordnung oder die Verlängerung der Haft ablehnt, findet Absatz 1 keine Anwendung.'' Diese Rechtsfolge hat erhebliche Auswirkungen, da sie die zwingende Zurückweisung nach Abs. 1 aufhebt. Das Fehlen dieser Regelung ist ein gravierender materieller Fehler, der die praktische Anwendung erheblich beeinträchtigt.'
@@ -625,7 +625,7 @@ INSERT INTO QualitaetsAudit_Detailbewertungen (
 INSERT INTO QualitaetsAudit_Detailbewertungen (
   FK_AuditID, Kategorie, Score, Begruendung
 ) VALUES (
-  LAST_INSERT_ID(),
+  14,
   'Logische Konsistenz der Regeln',
   9,
   'Die vorhandenen Regeln sind logisch konsistent aufgebaut. Die Prioritätenreihenfolge (10-40) ist sinnvoll: Zuerst werden die einzelnen Ausschlussgründe geprüft, dann bei Erfüllung aller Voraussetzungen die positive Soll-Anordnung. Die Anzeige-Bedingungen verhindern unnötige Prüfungen. Die UND-Verknüpfung in Regel 4 ist korrekt, da alle drei Bedingungen kumulativ vorliegen müssen. Allerdings fehlt die Logik für die Behandlung der richterlichen Ablehnung und deren Auswirkung auf Abs. 1.'
@@ -633,7 +633,7 @@ INSERT INTO QualitaetsAudit_Detailbewertungen (
 INSERT INTO QualitaetsAudit_Detailbewertungen (
   FK_AuditID, Kategorie, Score, Begruendung
 ) VALUES (
-  LAST_INSERT_ID(),
+  14,
   'Qualität der Fragetexte und Ergebnisprofile',
   9,
   'Die Fragetexte sind klar, präzise und für Sachbearbeiter gut verständlich formuliert. Die Begleittexte bieten hilfreiche Erläuterungen (z.B. Beispiele für Haftgründe). Die Ergebnisprofile machen deutlich, dass es sich um eine Soll-Vorschrift handelt und weisen korrekt auf die Ausnahmemöglichkeit in atypischen Fällen hin. Die Formulierungen sind fachlich korrekt und anwenderfreundlich.'

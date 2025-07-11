@@ -223,3 +223,85 @@ function generateAllSql() {
     
     console.log("=== SQL-Generierung abgeschlossen ===");
 }
+
+/**
+ * Führt die generierten SQL-Befehle in der Datenbank aus
+ */
+function executeSqlInDatabase() {
+    const sqlCommands = document.getElementById('gesamtesSqlOutput').value;
+    const einheitId = SimONAState.currentSimulationsEinheitID;
+    
+    if (!sqlCommands || sqlCommands.trim() === '') {
+        alert('Keine SQL-Befehle vorhanden. Bitte erst SQL generieren.');
+        return;
+    }
+    
+    if (!einheitId) {
+        alert('Keine SimulationsEinheit_ID vorhanden.');
+        return;
+    }
+    
+    // Sicherheitsabfrage
+    if (!confirm(`Möchten Sie die SQL-Befehle für "${einheitId}" wirklich in der Datenbank ausführen?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!`)) {
+        return;
+    }
+    
+    // UI-Feedback
+    const button = event.target;
+    const originalText = button.textContent;
+    const originalBg = button.style.backgroundColor;
+    button.disabled = true;
+    button.textContent = 'Speichere in Datenbank...';
+    button.style.backgroundColor = '#f39c12';
+    
+    // AJAX-Request
+    fetch('execute_sql.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            sql: sqlCommands,
+            einheitId: einheitId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Erfolgsmeldung
+            button.textContent = '✓ Erfolgreich gespeichert!';
+            button.style.backgroundColor = '#27ae60';
+            
+            alert(`Erfolgreich in Datenbank gespeichert!\n\nSimulationsEinheit: ${data.einheitId}\nBetroffene Datensätze: ${data.affectedRows}\nZeitpunkt: ${data.timestamp}`);
+            
+            // Nach 3 Sekunden Button zurücksetzen
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.backgroundColor = originalBg;
+                button.disabled = false;
+            }, 3000);
+            
+            // Optional: Versionsübersicht aktualisieren
+            const gesetz = getInputValue("gesetz");
+            const paragraph = getInputValue("paragraph");
+            if (gesetz && paragraph) {
+                showVersionOverview(gesetz, paragraph, getInputValue("absatz"), getInputValue("satz"));
+            }
+            
+        } else {
+            throw new Error(data.message || 'Unbekannter Fehler');
+        }
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Fehler beim Speichern in der Datenbank:\n\n' + error.message);
+        
+        // Button zurücksetzen
+        button.textContent = originalText;
+        button.style.backgroundColor = originalBg;
+        button.disabled = false;
+    });
+}
+
+// Globale Funktion exportieren
+window.executeSqlInDatabase = executeSqlInDatabase;

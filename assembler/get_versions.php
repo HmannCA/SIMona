@@ -41,6 +41,7 @@ try {
                 se.Einheit_ID,
                 se.Prompt_Version,
                 se.Kurzbeschreibung,
+                se.Paragraph_Offizielle_Bezeichnung,
                 se.Letzte_Aenderung_SimONA_Datum as created_date,
                 se.Version_SimONA,
                 COUNT(DISTINCT p.Parameter_ID) as parameter_count,
@@ -59,7 +60,7 @@ try {
                        ROW_NUMBER() OVER (PARTITION BY FK_Einheit_ID ORDER BY Audit_Timestamp DESC) as rn
                 FROM QualitaetsAudits
             ) qa ON se.Einheit_ID = qa.FK_Einheit_ID AND qa.rn = 1
-            WHERE se.Gesetz = ?
+            WHERE UPPER(se.Gesetz) = UPPER(?)
             AND se.Paragraph = ?";
     
     // Parameter für prepared statement
@@ -71,22 +72,24 @@ try {
         $sql .= " AND se.Absatz = ?";
         $params[] = $absatz;
         $types .= "s";
-    } else {
-        $sql .= " AND (se.Absatz IS NULL OR se.Absatz = '')";
     }
-    
+
     if ($satz) {
         $sql .= " AND se.Satz = ?";
         $params[] = $satz;
         $types .= "s";
-    } else {
-        $sql .= " AND (se.Satz IS NULL OR se.Satz = '')";
     }
     
-    $sql .= " GROUP BY se.Einheit_ID, se.Prompt_Version, se.Kurzbeschreibung, 
-                       se.Letzte_Aenderung_SimONA_Datum, se.Version_SimONA,
-                       qa.Gesamtscore, qa.Gesamtfazit, qa.Audit_Timestamp
-              ORDER BY se.Prompt_Version, se.Letzte_Aenderung_SimONA_Datum DESC";
+    // Verwende COALESCE um NULL-Werte als 'v1' zu behandeln
+    $sql = str_replace(
+        "se.Prompt_Version,", 
+        "COALESCE(se.Prompt_Version, 'v1') as Prompt_Version,", 
+        $sql
+    );
+    $sql .= " GROUP BY se.Einheit_ID, COALESCE(se.Prompt_Version, 'v1'), se.Kurzbeschreibung, se.Paragraph_Offizielle_Bezeichnung,
+                    se.Letzte_Aenderung_SimONA_Datum, se.Version_SimONA,
+                    qa.Gesamtscore, qa.Gesamtfazit, qa.Audit_Timestamp 
+                ORDER BY se.Paragraph, CAST(se.Absatz AS UNSIGNED), CAST(se.Satz AS UNSIGNED), se.Prompt_Version DESC";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -107,9 +110,9 @@ try {
         
         // Formatiere Datum
         if ($row['created_date']) {
-            $row['created'] = date('Y-m-d H:i', strtotime($row['created_date']));
+            $created = date('d.m.Y', strtotime($row['created_date']));
         } else {
-            $row['created'] = 'Unbekannt';
+            $created = 'Unbekannt';
         }
         
         // Bereinige NULL-Werte
@@ -120,15 +123,16 @@ try {
         $versions[] = [
             'id' => $row['Einheit_ID'],
             'promptVersion' => $row['Prompt_Version'] ?? 'v1',
-            'created' => $row['created'],
+            'created' => $created,
             'parameterCount' => $row['parameter_count'],
             'rulesCount' => $row['rules_count'],
             'profilesCount' => $row['profiles_count'],
             'qualityScore' => $row['quality_score'],
             'qualityFazit' => $row['quality_fazit'],
-            'auditDate' => $row['audit_date'] ? date('Y-m-d H:i', strtotime($row['audit_date'])) : null,
+            'auditDate' => $row['audit_date'] ? date('d.m.Y H:i', strtotime($row['audit_date'])) : null,
             'simonaVersion' => $row['Version_SimONA'],
-            'description' => $row['Kurzbeschreibung']
+            'description' => $row['Kurzbeschreibung'],
+            'paragraphBezeichnung' => $row['Paragraph_Offizielle_Bezeichnung'] ?? null
         ];
     }
     

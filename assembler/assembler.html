@@ -487,6 +487,7 @@
             <h3>Schritt 7: SQL-Gesamtausgabe</h3>
             <p class="info">Hier werden alle generierten SQL-Befehle in der korrekten Reihenfolge für die Datenbankeingabe gesammelt.</p>
             <button class="sql-button" onclick="generateAllSql()">Alle SQL-Befehle generieren</button>
+            <button class="sql-button" onclick="executeSqlInDatabase()" style="background-color: #e74c3c;">In Datenbank speichern</button>
             <button class="copy-button" onclick="copyToClipboard('gesamtesSqlOutput', this)">Gesamtes SQL kopieren</button>
             <button onclick="clearSqlOutput()">SQL-Ausgabe leeren</button>
             <div id="validation-report-area" style="display: none;"></div>
