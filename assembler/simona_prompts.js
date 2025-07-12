@@ -18,7 +18,7 @@ Weitere Detailanweisungen für Analyse-Prompts:
 WICHTIG: Nenne diesen Chat: {{NORMTEIL_BEZEICHNUNG}} {{GESETZ_ABK}} SimONA-Analyse.
 Antworte auf DIESEN SimONA_Priming_Systemanweisung-Prompt und NUR auf diesen einen Initial-Prompt ausschließlich mit der einzelnen Zeile: Ich bin bereit!`,
 
-    SimONA_P0_5_ParagraphAnalyse: `ANALYSEAUFTRAG: METADATEN- UND STRUKTURANALYSE EINES RECHTSPARAGRAPHEN
+    SimONA_P0_5_ParagraphAnalyse: `1.0 - ANALYSEAUFTRAG: METADATEN- UND STRUKTURANALYSE EINES RECHTSPARAGRAPHEN
 
 KONTEXT:
 Du bist eine hochspezialisierte KI für die strukturelle Zerlegung und Metadaten-Extraktion von deutschen Rechtsnormen. Deine Aufgabe ist es, einen dir übergebenen Textblock, der einen vollständigen Paragraphen einer deutschen Rechtsnorm enthält, zu analysieren.

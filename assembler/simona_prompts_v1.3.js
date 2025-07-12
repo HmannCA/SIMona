@@ -3,7 +3,7 @@
 // FINALE VERSION: Kombiniert die "SimONA-Philosophie" (v1.2) mit der formalen Rigorosität (aus v2.5)
 
 const promptTemplates = {
-    SimONA_Priming_Systemanweisung: `Du bist eine hochspezialisierte KI zur präzisen Analyse deutscher Rechtsnormen für das SimONA-System. Deine Aufgabe ist es, für alle spezifischen Analyse-Prompts (wie SimONA_P1_EinheitMetadaten, SimONA_P2_ParameterExtraktion, etc.), die dir nach dieser Systemanweisung folgen, die angeforderten Informationen ausschließlich aus dem dir primär übergebenen Gesetzestext-Auszug zu extrahieren und als reinen JSON-String zurückzugeben.
+    SimONA_Priming_Systemanweisung: `Hi, Du bist eine hochspezialisierte KI zur präzisen Analyse deutscher Rechtsnormen für das SimONA-System. Deine Aufgabe ist es, für alle spezifischen Analyse-Prompts (wie SimONA_P1_EinheitMetadaten, SimONA_P2_ParameterExtraktion, etc.), die dir nach dieser Systemanweisung folgen, die angeforderten Informationen ausschließlich aus dem dir primär übergebenen Gesetzestext-Auszug zu extrahieren und als reinen JSON-String zurückzugeben.
 
 Grundprinzip des SimONA-Systems: Anwenderführung
 Bedenke bei allen folgenden Analysen stets den Endzweck: Deine extrahierten Daten bilden die Grundlage für ein interaktives Schulungs- und Assistenzsystem. Das System soll einen angehenden Fachexperten Schritt für Schritt und logisch nachvollziehbar durch die Prüfung einer Rechtsnorm führen. Deine Aufgabe ist es daher nicht nur, Daten zu extrahieren, sondern sie so zu strukturieren, dass eine dynamische, geführte Simulation entsteht. Das bedeutet, komplexe Normen müssen in ihre kleinsten logischen Prüfschritte zerlegt werden.
@@ -22,7 +22,7 @@ Weitere Detailanweisungen für Analyse-Prompts:
 WICHTIG: Nenne diesen Chat: {{NORMTEIL_BEZEICHNUNG}} {{GESETZ_ABK}} SimONA-Analyse.
 Antworte auf DIESEN SimONA_Priming_Systemanweisung-Prompt und NUR auf diesen einen Initial-Prompt ausschließlich mit der einzelnen Zeile: Ich bin bereit!`,
 
-    SimONA_P0_5_ParagraphAnalyse: `ANALYSEAUFTRAG: METADATEN- UND STRUKTURANALYSE EINES RECHTSPARAGRAPHEN
+    SimONA_P0_5_ParagraphAnalyse: `1.3 - ANALYSEAUFTRAG: METADATEN- UND STRUKTURANALYSE EINES RECHTSPARAGRAPHEN
 
 KONTEXT:
 Du bist eine hochspezialisierte KI für die strukturelle Zerlegung und Metadaten-Extraktion von deutschen Rechtsnormen. Deine Aufgabe ist es, einen dir übergebenen Textblock, der einen vollständigen Paragraphen einer deutschen Rechtsnorm enthält, zu analysieren.
@@ -93,55 +93,53 @@ Gib die Antwort AUSSCHLIESSLICH als einzelnes JSON-Objekt zurück.
   "Paragraph_Offizielle_Bezeichnung": "STRING (max 255 Zeichen) - Die offizielle Überschrift des Paragraphen aus dem Gesetz. RECHERCHIERE basierend auf der 'Quelle-URL'. Wenn keine existiert → null."
 }`,
 
-    SimONA_P2_ParameterExtraktion: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabelle: Parameter und Parameter_Antwortoptionen)
+    SimONA_P2_ParameterExtraktion: `ANALYSEAUFTRAG FÜR SimONA-DATENBANK (Tabelle: Parameter)
 
 NORMBEZUG:
 Gesetz/Verordnung (Abkürzung): {{GESETZ_ABK}}
-Zu analysierender Normteil (Paragraph, Absatz, Satz): {{NORMTEIL_BEZEICHNUNG}}
-Exakter Wortlaut des Normteils (Primärquelle für DIESEN Prompt): "{{NORMTEXT_P1_ZITAT}}"
+Zu analysierender Normteil: {{NORMTEIL_BEZEICHNUNG}}
+Exakter Wortlaut des Normteils: "{{NORMTEXT_P1_ZITAT}}"
 
 ANWEISUNG:
 Analysiere den Normtext. Deine Aufgabe ist es, ALLE einzelnen Tatbestandsmerkmale zu identifizieren und als atomare Parameter zu formulieren.
 
-KRITISCHE REGEL ZUR VERMEIDUNG KONZEPTIONELLER FEHLER:
-**NIEMALS** darf ein Parameter die juristische Gesamtbewertung oder Schlussfolgerung vorwegnehmen! 
-
-VERBOTEN sind Parameter wie:
-- "Liegt ein Ausschlussgrund vor?"
-- "Sind die Voraussetzungen erfüllt?"
-- "Besteht ein Anspruch?"
-
-STATTDESSEN müssen die EINZELNEN, ATOMAREN Tatbestandsmerkmale als separate Parameter erfasst werden.
-Beispiele für KORREKTE atomare Parameter:
-- BGB: "Hat der Käufer den Mangel bei Vertragsschluss gekannt?" (statt "Liegt ein Gewährleistungsausschluss vor?")
-- SGB: "Ist die Person unter 25 Jahre alt?" (statt "Liegt ein Leistungsausschluss vor?")
-- Verwaltungsrecht: "Wurde die Frist von 30 Tagen überschritten?" (statt "Ist der Antrag verfristet?")
-
-Das SYSTEM (nicht der Anwender) muss aus den Antworten auf diese atomaren Fragen die juristische Schlussfolgerung ziehen.
+KRITISCHE REGELN ZUR VERMEIDUNG VON FEHLERN:
+1.  **KEINE DUPLIKATE:** Jede 'Parameter_ID' im finalen JSON-Array muss absolut einzigartig sein. Prüfe vor der Ausgabe, dass du kein Tatbestandsmerkmal doppelt erfasst hast.
+2.  **KEINE BEWERTUNG:** Frage NIEMALS die juristische Schlussfolgerung ab (z.B. "Liegt ein Anspruch vor?"). Frage IMMER nur nach den zugrundeliegenden FAKTEN (z.B. "Ist die Person unter 18 Jahre alt?").
+3.  **UNTERSCHIED UNTÄTIGKEIT VS. HANDLUNG:** Wenn die Norm eine Handlungspflicht enthält (z.B. "...hat die Behörde Maßnahmen zu treffen..."), erstelle einen expliziten Parameter, der abfragt, OB eine Maßnahme getroffen wurde (z.B. 'P_8_1_MassnahmeGetroffen' mit Antworttyp 'JaNein'), bevor du fragst, WELCHE Maßnahme getroffen wurde. Dies ist entscheidend für die Prüfung auf Untätigkeit.
 
 VOLLSTÄNDIGKEITSPRÜFUNG VOR DER EXTRAKTION:
 - Hast du JEDES Substantiv im Normtext geprüft, ob es ein zu prüfendes Tatbestandsmerkmal darstellt?
-- Hast du JEDE Bedingung ("wenn", "soweit", "es sei denn", "sofern") erfasst?
-- Hast du Verweise auf andere Normen als potenzielle Parameter erkannt?
+- Hast du JEDE Bedingung ("wenn", "soweit", "es sei denn") erfasst?
+- Hast du auch die Rechtsfolgen (die getroffenen oder nicht getroffenen Maßnahmen) als Parameter erfasst?
 
 Gib deine Antwort AUSSCHLIESSLICH als JSON-Array von Parameter-Objekten zurück:
 [
   {
-    "Parameter_ID": "STRING - Ein eindeutiger Bezeichner: P_{{PARA_NUM}}_{{ABS_NUM}}_[MerkmalName].",
-    "Reihenfolge_Anzeige": "INTEGER - Logische Prüfreihenfolge. EMPFEHLUNG: 1-10 für Anwendungsbereich/Grundvoraussetzungen, 11-50 für materielle Voraussetzungen, 51-99 für Ausnahmen/Sonderbedingungen.",
-    "Fragetext": "TEXT - Formuliere eine klare, präzise Frage, die auf einen FAKT abzielt, nicht auf eine rechtliche Bewertung.",
+    "Parameter_ID": "STRING - Eindeutiger Bezeichner: P_{{PARA_NUM}}_{{ABS_NUM}}_[MerkmalName].",
+    "Reihenfolge_Anzeige": "INTEGER - Logische Prüfreihenfolge.",
+    "Fragetext": "TEXT - Formuliere eine klare, präzise Frage, die auf einen FAKT abzielt.",
     "Antworttyp": "STRING - 'JaNein', 'AuswahlEinfach', 'TextfeldKurz'.",
     "Antwortoptionen_bei_Auswahl": [ /* NUR bei 'AuswahlEinfach'. */ ],
-    "Begleittext": "TEXT - Kurzer, hilfreicher Erklärungstext. Z.B. Legaldefinitionen.",
-    "Normbezug_Detail_Parameter": "STRING - Die genaue Stelle im Normtext, auf die sich der Parameter bezieht.",
-    "Verweis_Normen_Info_Parameter": "STRING - Falls auf andere Normen verwiesen wird, liste diese hier auf.",
+    "Begleittext": "TEXT - Kurzer, hilfreicher Erklärungstext.",
+    "Normbezug_Detail_Parameter": "STRING - Die genaue Stelle im Normtext.",
+    "Verweis_Normen_Info_Parameter": "STRING - Falls auf andere Normen verwiesen wird.",
     "FK_Verlinkte_SimulationsEinheit_ID_Platzhalter": "STRING - Immer null.",
-    "Ist_Grundvoraussetzung": "BOOLEAN - true, wenn die Nichterfüllung die weitere Prüfung des Normteils obsolet macht.",
-    "Anzeige_Bedingung": [ /* Bedingungen, wann diese Frage angezeigt wird. */ ],
-    "Text_Erfuellt_Pro": "TEXT - Sachliche Feststellung im Nominalstil bei Erfüllung. Beispiel: 'Vorliegen der Eigenschaft als Ausländer.'",
-    "Text_NichtErfuellt_Contra": "TEXT - Sachliche Feststellung im Nominalstil bei Nichterfüllung. Beispiel: 'Kein Vorliegen der Eigenschaft als Ausländer.'"
+    "Ist_Grundvoraussetzung": "BOOLEAN - true, wenn die Nichterfüllung die weitere Prüfung obsolet macht.",
+    "Anzeige_Bedingung": [
+        /* WICHTIG: Verwende EXAKT diese Schlüsselnamen!
+        {
+          "Referenz_Parameter_ID": "STRING - Die ID des Parameters, von dem diese Frage abhängt.",
+          "Referenz_Antwort_Operator": "STRING - z.B. 'IST_GLEICH', 'IST_WAHR'.",
+          "Referenz_Antwort_Wert_Intern": "STRING/BOOLEAN - Der erwartete Wert."
+        }
+        */
+    ],
+    "Text_Erfuellt_Pro": "TEXT - Sachliche Feststellung im Nominalstil (z.B. 'Vorliegen einer unmittelbaren Gefahr.').",
+    "Text_NichtErfuellt_Contra": "TEXT - Sachliche Feststellung im Nominalstil (z.B. 'Kein Vorliegen einer unmittelbaren Gefahr.')."
   }
 ]`,
+
 
     SimONA_P2_5_ErgebnisProfilVorschlaege: `ANALYSEAUFTRAG: Vorschlag für Ergebnis-Kategorien
 

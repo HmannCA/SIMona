@@ -1,62 +1,64 @@
 <?php
 // get_audits.php - Lädt alle Audits für eine SimulationsEinheit
-// Version: 2.5
+// Version: 2.7 - Finale Korrektur, holt P5_Response_JSON mit
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Fehlerbehandlung
+// Verbesserter SQL-Join mit SimulationsEinheiten für Paragraph, Absatz, Satz und Prompt_Version
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
-
 require 'db_config.php';
 
-// Überprüfe Datenbankverbindung
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode([
-        'success' => false, 
-        'message' => 'Datenbankverbindung fehlgeschlagen'
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Datenbankverbindung fehlgeschlagen']);
     exit();
 }
 
-// SimulationsEinheit_ID aus GET-Parameter
-$einheitId = $_GET['einheitId'] ?? null;
+$einheitId_raw = $_GET['einheit_id'] ?? $_GET['einheitId'] ?? null;
 
-if (!$einheitId) {
+if (!$einheitId_raw) {
     http_response_code(400);
-    echo json_encode([
-        'success' => false, 
-        'message' => 'Keine SimulationsEinheit_ID angegeben'
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Keine SimulationsEinheit_ID angegeben.']);
     exit();
 }
+
+$suchmuster = trim($einheitId_raw) . "%";
 
 try {
-    // SQL-Query für Audits
+    // SQL-Abfrage mit JOIN auf SimulationsEinheiten für zusätzliche Informationen
     $sql = "SELECT 
-                AuditID,
-                FK_Einheit_ID,
-                Audit_Timestamp,
-                Gesamtscore,
-                Gesamtfazit
-            FROM QualitaetsAudits
-            WHERE FK_Einheit_ID = ?
-            ORDER BY Audit_Timestamp DESC";
+                qa.AuditID,
+                qa.FK_Einheit_ID,
+                qa.Audit_Timestamp,
+                qa.Gesamtscore,
+                qa.Gesamtfazit,
+                qa.P5_Response_JSON,
+                se.Paragraph,
+                se.Absatz,
+                se.Satz,
+                se.Prompt_Version
+            FROM 
+                QualitaetsAudits qa
+            LEFT JOIN 
+                SimulationsEinheiten se ON qa.FK_Einheit_ID = se.Einheit_ID
+            WHERE 
+                qa.FK_Einheit_ID LIKE ?
+            ORDER BY 
+                qa.Audit_Timestamp DESC";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         throw new Exception("Fehler beim Vorbereiten der SQL-Abfrage: " . $conn->error);
     }
     
-    $stmt->bind_param("s", $einheitId);
+    $stmt->bind_param("s", $suchmuster);
     $stmt->execute();
     
     $result = $stmt->get_result();
     $audits = [];
     
     while ($row = $result->fetch_assoc()) {
-        // Konvertiere Decimal zu Float für JSON
         if ($row['Gesamtscore'] !== null) {
             $row['Gesamtscore'] = floatval($row['Gesamtscore']);
         }
@@ -65,7 +67,6 @@ try {
     
     $stmt->close();
     
-    // Erfolgreiche Antwort
     echo json_encode([
         'success' => true,
         'audits' => $audits,

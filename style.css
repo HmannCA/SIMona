@@ -791,3 +791,17 @@
     color: #343a40;
     margin-bottom: 10px;
 }
+
+
+.score-badge {
+    display: inline-block;  /* Stellt sicher, dass das Rechteck nur so breit ist wie sein Inhalt */
+    padding: 6px 14px;      /* Innenabstand (oben/unten und links/rechts) */
+    border-radius: 8px;     /* Abgerundete Ecken */
+    font-size: 1.2em;       /* Größere Schrift für den Score */
+    font-weight: bold;      /* Fette Schrift */
+    line-height: 1;         /* Stellt sicher, dass der Text vertikal zentriert ist */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtiler Schatten für 3D-Effekt */
+    margin-top: 5px;        /* Kleiner Abstand nach oben */
+    min-width: 120px;       /* Mindestbreite, damit die Badges einheitlich aussehen */
+    text-align: center;
+}

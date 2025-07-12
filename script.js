@@ -136,41 +136,59 @@ async function fetchEinheitenForNorm(gesetz, paragraph) {
             return []; 
         }
     } catch (error) {
-        console.error(`Fehler in fetchEinheitenForNorm (Gesetz: ${gesetz}, Paragraph: ${paragraph}):`, error);
+        console.error(`Fehler in fetchEinheitenForNorm (Gesetz: ${gesetz}, Paragraph: ${paragraph}):`, error);fetchAndDisplayAudits
         return [];
     }
 }
 
-// ERSETZEN SIE DIESE FUNKTION IN script.js
-// ERSETZEN SIE DIESE FUNKTION IN script.js
-async function fetchAndDisplayAudits(einheitId, tabId) {
-    console.log(`SimONA Logik: Lade Audit-Daten für Einheit ${einheitId}`);
+
+
+// In script.js
+
+/**
+ * KORRIGIERTE VERSION
+ * Holt Audits und gibt das korrekte Array an die UI-Funktion weiter.
+ */
+async function fetchAndDisplayAudits(einheitIdBasis, tabId) {
+    console.log(`SimONA Logik: Lade Audit-Daten für Basis-ID ${einheitIdBasis}`);
     const qaTabContent = document.getElementById(tabId);
     if (!qaTabContent) return;
-    qaTabContent.innerHTML = '<p>Lade Audit-Daten...</p>';
+
+    // UI-Funktion zum Anzeigen des Ladezustands aufrufen
+    if (typeof uiRenderAuditData === "function") {
+        uiRenderAuditData(null, tabId, einheitIdBasis, true);
+    } else {
+        qaTabContent.innerHTML = '<p>Lade Audit-Daten...</p>';
+    }
 
     try {
-        // HIER IST DIE ÄNDERUNG: Ein Cache-Busting Parameter wird hinzugefügt
-        const urlWithCacheBuster = `get_audits.php?einheit_id=${encodeURIComponent(einheitId)}&_=${new Date().getTime()}`;
-        
-        console.log("SimONA Logik: Rufe Audit-URL auf: ", urlWithCacheBuster); // Log zur Kontrolle
-        
+        const urlWithCacheBuster = `assembler/get_audits.php?einheit_id=${encodeURIComponent(einheitIdBasis)}&_=${new Date().getTime()}`;
         const response = await fetch(urlWithCacheBuster);
 
         if (!response.ok) {
-            throw new Error(`HTTP-Fehler ${response.status} beim Abrufen der Audit-Daten.`);
+            throw new Error(`Netzwerkfehler ${response.status} beim Abrufen der Audit-Daten.`);
         }
-        const auditData = await response.json();
+        
+        const responseData = await response.json();
 
-        if (typeof uiRenderAuditData === 'function') {
-            uiRenderAuditData(auditData, tabId, einheitId);
+        // --- HIER IST DIE KORREKTUR ---
+        // Prüfen, ob die Antwort erfolgreich war und ob 'audits' ein Array ist
+        if (responseData && responseData.success && Array.isArray(responseData.audits)) {
+            // NUR das Array 'responseData.audits' wird an die UI-Funktion übergeben
+            if (typeof uiRenderAuditData === 'function') {
+                uiRenderAuditData(responseData.audits, tabId, einheitIdBasis, false);
+            }
         } else {
-            console.error("SimONA Logik: UI-Funktion uiRenderAuditData nicht gefunden.");
-            qaTabContent.innerHTML = '<p style="color:red;">Fehler: Anzeigefunktion für Audits fehlt.</p>';
+            // Fehler, wenn die Antwortstruktur nicht stimmt
+            throw new Error(responseData.message || "Die Antwort vom Server hatte ein unerwartetes Format.");
         }
+        // --- ENDE DER KORREKTUR ---
+
     } catch (error) {
         console.error("Fehler in fetchAndDisplayAudits:", error);
-        qaTabContent.innerHTML = `<p style="color:red;">Audit-Daten konnten nicht geladen werden: ${error.message}</p>`;
+        if (typeof uiRenderAuditData === "function") {
+            uiRenderAuditData(null, tabId, einheitIdBasis, false, error.message);
+        }
     }
 }
 

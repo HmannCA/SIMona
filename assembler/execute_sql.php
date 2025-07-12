@@ -1,83 +1,92 @@
 <?php
 // execute_sql.php - Führt die generierten SQL-Befehle aus
-// Version: 2.5
+// Version: 2.6 - Mit verbessertem Command-Whitelisting-Sicherheitscheck
 
 header('Content-Type: application/json; charset=utf-8');
 
 // Fehlerbehandlung
-ini_set('display_errors', 0);
+ini_set('display_errors', 0); // Im Produktivbetrieb Fehler nicht anzeigen
 error_reporting(E_ALL);
 
 require 'db_config.php';
 
-// Überprüfe Datenbankverbindung
+// Datenbankverbindung prüfen
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode([
-        'success' => false, 
-        'message' => 'Datenbankverbindung fehlgeschlagen'
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Datenbankverbindung fehlgeschlagen']);
     exit();
 }
 
-// Empfange POST-Daten
+// POST-Daten empfangen
 $postData = json_decode(file_get_contents('php://input'), true);
 
 if (!$postData || !isset($postData['sql'])) {
     http_response_code(400);
-    echo json_encode([
-        'success' => false, 
-        'message' => 'Keine SQL-Befehle empfangen'
-    ]);
+    echo json_encode(['success' => false, 'message' => 'Keine SQL-Befehle empfangen']);
     exit();
 }
 
 $sqlCommands = $postData['sql'];
 $einheitId = $postData['einheitId'] ?? 'Unbekannt';
 
-// Sicherheitsprüfung: Nur erlaubte SQL-Befehle
-$allowedCommands = ['INSERT', 'UPDATE', 'SET', 'START TRANSACTION', 'COMMIT', 'ROLLBACK'];
-$sqlUpper = strtoupper($sqlCommands);
+// =================================================================
+// === NEUER, VERBESSERTER SICHERHEITSCHECK (COMMAND WHITELISTING) ===
+// =================================================================
 
-$forbidden = false;
-if (strpos($sqlUpper, 'DROP') !== false || 
-    strpos($sqlUpper, 'DELETE') !== false || 
-    strpos($sqlUpper, 'TRUNCATE') !== false ||
-    strpos($sqlUpper, 'ALTER') !== false) {
-    $forbidden = true;
+// 1. Liste der explizit erlaubten SQL-Befehle am Anfang eines Statements
+$allowedCommands = ['INSERT', 'UPDATE', 'SET', 'START', 'COMMIT', 'ROLLBACK'];
+
+// 2. Zerlege den SQL-String in einzelne Befehle (an jedem Semikolon)
+$commands = explode(';', $sqlCommands);
+$allCommandsAreSafe = true;
+
+foreach ($commands as $command) {
+    $trimmedCommand = trim($command);
+    if (empty($trimmedCommand)) {
+        continue; // Leere Befehle (z.B. nach dem letzten Semikolon) ignorieren
+    }
+    
+    // 3. Extrahiere das erste Wort des Befehls (Groß-/Kleinschreibung wird ignoriert)
+    // strtok() ist robust gegen verschiedene Leerzeichen am Anfang
+    $firstWord = strtoupper(strtok($trimmedCommand, " \t\r\n("));
+    
+    // 4. Prüfe, ob das erste Wort in der Whitelist ist
+    if (!in_array($firstWord, $allowedCommands)) {
+        $allCommandsAreSafe = false;
+        // Logge den problematischen Befehl für die Fehlersuche
+        error_log("SimONA Security: Unerlaubter Befehl '$firstWord' in SQL für Einheit '$einheitId' blockiert.");
+        break; // Schleife abbrechen, ein Fehler reicht
+    }
 }
 
-if ($forbidden) {
-    http_response_code(403);
+if (!$allCommandsAreSafe) {
+    http_response_code(403); // Forbidden
     echo json_encode([
         'success' => false, 
-        'message' => 'Nicht erlaubte SQL-Befehle erkannt'
+        'message' => 'Unerlaubter SQL-Befehlstyp erkannt. Ausführung wurde aus Sicherheitsgründen verweigert.'
     ]);
     exit();
 }
 
-// Log-Datei für Debugging
-$logFile = 'sql_execution_log.txt';
-$logEntry = date('Y-m-d H:i:s') . " - Einheit: $einheitId\n";
-file_put_contents($logFile, $logEntry, FILE_APPEND);
+// =================================================================
+// === ENDE DES NEUEN SICHERHEITSCHECKS ===
+// =================================================================
+
 
 try {
     // Multi-Query ausführen
     if ($conn->multi_query($sqlCommands)) {
         $affectedRows = 0;
-        $results = [];
         
         do {
-            // Speichere Ergebnis
+            // Betroffene Zeilen zählen
+            if ($conn->affected_rows > -1) { // Nur bei echten DML-Statements
+                $affectedRows += $conn->affected_rows;
+            }
+            // Eventuelle Ergebnis-Sets verwerfen, die von `SET` kommen könnten
             if ($result = $conn->store_result()) {
                 $result->free();
             }
-            
-            // Zähle betroffene Zeilen
-            if ($conn->affected_rows > 0) {
-                $affectedRows += $conn->affected_rows;
-            }
-            
         } while ($conn->more_results() && $conn->next_result());
         
         // Prüfe auf Fehler im letzten Statement
@@ -99,9 +108,7 @@ try {
     }
     
 } catch (Exception $e) {
-    // Rollback bei Fehler
-    $conn->query("ROLLBACK");
-    
+    // Bei Fehlern in der Transaktion wird von der DB automatisch ein Rollback durchgeführt
     http_response_code(500);
     echo json_encode([
         'success' => false,

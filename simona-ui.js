@@ -86,15 +86,23 @@ document.addEventListener('DOMContentLoaded', () => {
 // === II. FUNKTIONEN FÜR UI-MANIPULATION
 // ====================================================================================
 
+/**
+  * Erkennt Varianten, rendert das Auswahl-Dropdown und steuert den Prozess.
+ */
 function updateAbsatzTabs(gesetz, paragraph, einheiten) {
     const tabNavigation = document.querySelector('.tab-navigation');
-    
-    // Alte dynamische Tabs entfernen
+    const tabContentContainer = document.querySelector('.tab-content-area');
+
+    // Komplette Bereinigung der alten dynamischen Tabs und Inhalte
     tabNavigation.querySelectorAll('.tab-link').forEach(b => {
-        if (b.getAttribute('data-tab') !== 'tab-overview' && b.getAttribute('data-tab') !== 'tab-result'  && b.getAttribute('data-tab') !== 'tab-qa') b.remove();
+        if (b.getAttribute('data-tab') !== 'tab-overview' && b.getAttribute('data-tab') !== 'tab-result' && b.getAttribute('data-tab') !== 'tab-qa') {
+            b.remove();
+        }
     });
-    document.querySelectorAll('.tab-content-area .tab-content').forEach(c => {
-        if (c.id !== 'tab-overview' && c.id !== 'tab-result' && c.id !== 'tab-qa') c.remove();
+    tabContentContainer.querySelectorAll('.tab-content').forEach(c => {
+        if (c.id !== 'tab-overview' && c.id !== 'tab-result' && c.id !== 'tab-qa') {
+            c.remove();
+        }
     });
 
     // Info-Container zurücksetzen
@@ -103,134 +111,142 @@ function updateAbsatzTabs(gesetz, paragraph, einheiten) {
     document.getElementById('widget-norm-stats').style.display = 'none';
 
     if (!einheiten || einheiten.length === 0) {
-        if (typeof uiUpdateMainHeader === "function") uiUpdateMainHeader(gesetz, paragraph, "(Keine Absätze definiert)");
+        uiUpdateMainHeader(gesetz, paragraph, "(Keine Absätze definiert)");
         return;
     }
     
+    // Allgemeine Infos zum Paragraphen anzeigen
     const paragraphBezeichnung = einheiten[0].Paragraph_Offizielle_Bezeichnung || "";
     const paragrafBeschreibung = einheiten[0].Paragraf_Gesamtbeschreibung || "";
     const gesamterParagraphText = einheiten.map(e => e.Gesetzestext_Zitat || '').filter(t => t).join('\n\n').trim();
-    if (typeof uiUpdateMainHeader === "function") uiUpdateMainHeader(gesetz, paragraph, paragraphBezeichnung);
-    if (typeof uiDisplayParagraphInfoBox === "function") uiDisplayParagraphInfoBox(paragraphBezeichnung, paragrafBeschreibung, gesamterParagraphText);
-
+    uiUpdateMainHeader(gesetz, paragraph, paragraphBezeichnung);
+    uiDisplayParagraphInfoBox(paragraphBezeichnung, paragrafBeschreibung, gesamterParagraphText);
     if (typeof fetchAndRenderNormStats === "function") fetchAndRenderNormStats(gesetz, paragraph);
     
+    // --- Logik zur Variantenerkennung ---
     const variantenMap = new Map();
     einheiten.forEach(einheit => {
-        const match = einheit.Einheit_ID.match(/__v_(.+)$/);
+        const match = einheit.Einheit_ID.match(/__v_([^_]+)/);
         const variante = match ? match[1] : 'Standard';
-        if (!variantenMap.has(variante)) variantenMap.set(variante, []);
+        if (!variantenMap.has(variante)) {
+            variantenMap.set(variante, []);
+        }
         variantenMap.get(variante).push(einheit);
     });
-    const alleEinheiten = einheiten; 
-    uiRenderVariantenAuswahl(Array.from(variantenMap.keys()), alleEinheiten, tabNavigation);
+
+    console.log('Gefundene Varianten:', Array.from(variantenMap.keys())); // Debug-Ausgabe
+    uiRenderVariantenAuswahl(variantenMap, einheiten, tabNavigation);
 }
 
-function uiRenderVariantenAuswahl(varianten, alleEinheiten, tabNavigation) {
+/**
+ * NEUE HILFSFUNKTION
+ * Rendert das Dropdown zur Variantenauswahl.
+ */
+function uiRenderVariantenAuswahl(variantenMap, alleEinheiten, tabNavigation) {
     const container = document.getElementById('variant-selection-container');
-    if (!container) return;
+    const varianten = Array.from(variantenMap.keys());
+    
     container.innerHTML = '<h3>Analyse-Variante auswählen:</h3>';
     
     if (varianten.length <= 1) {
+        console.log('Nur eine Variante gefunden, erstelle Tabs direkt.'); // Debug-Ausgabe
         container.style.display = 'none';
         createAbsatzTabsForVariant(alleEinheiten, tabNavigation);
         return;
     }
 
     const select = document.createElement('select');
+    select.id = 'variant-selector-dropdown';
     select.classList.add('dropdown-element');
     select.innerHTML = '<option value="">-- Bitte Variante wählen --</option>';
     
     varianten.forEach(variante => {
         const option = document.createElement('option');
         option.value = variante;
-        option.textContent = variante;
+        option.textContent = `${variante} (${variantenMap.get(variante).length} Absätze)`;
         select.appendChild(option);
     });
     
     select.addEventListener('change', (event) => {
         const gewaehlteVariante = event.target.value;
-        const gefilterteEinheiten = gewaehlteVariante ? alleEinheiten.filter(einheit => {
-            const match = einheit.Einheit_ID.match(/__v_(.+)$/);
-            const varianteName = match ? match[1] : 'Standard';
-            return varianteName === gewaehlteVariante;
-        }) : [];
+        console.log(`Variante ausgewählt: '${gewaehlteVariante}'`); // Debug-Ausgabe
+
+        const gefilterteEinheiten = gewaehlteVariante ? variantenMap.get(gewaehlteVariante) : [];
+        
+        console.log('Gefilterte Einheiten für Tab-Erstellung:', gefilterteEinheiten); // Debug-Ausgabe
         createAbsatzTabsForVariant(gefilterteEinheiten, tabNavigation);
     });
+    
     container.appendChild(select);
     container.style.display = 'block';
 }
 
-// ERSETZEN SIE DIE KOMPLETTE, BESTEHENDE FUNKTION DURCH DIESE FINALE VERSION V3
+
+/**
+ * Baut die UI für die ausgewählte Variante auf.
+ */
 function createAbsatzTabsForVariant(einheitenFuerVariante, tabNavigation) {
     const resultTabButton = tabNavigation.querySelector('.tab-link[data-tab="tab-result"]');
     const qaTabButton = document.querySelector('.tab-link[data-tab="tab-qa"]');
-    
-    let firstAbsatzTabId = null;
+    const tabContentContainer = document.querySelector('.tab-content-area');
 
-    // Alte dynamische Tabs entfernen
+    // Alte dynamische Tabs und Inhalte sowie QA-Handler entfernen
     tabNavigation.querySelectorAll('.tab-link').forEach(b => {
         if (b.getAttribute('data-tab') !== 'tab-overview' && b.getAttribute('data-tab') !== 'tab-result' && b.getAttribute('data-tab') !== 'tab-qa') {
             b.remove();
         }
     });
-    
+    tabContentContainer.querySelectorAll('.tab-content').forEach(c => {
+        if (c.id !== 'tab-overview' && c.id !== 'tab-result' && c.id !== 'tab-qa') {
+            c.remove();
+        }
+    });
+
     if (qaTabButton) {
         qaTabButton.style.display = 'none';
+        qaTabButton.onclick = null;
     }
 
     if (!einheitenFuerVariante || einheitenFuerVariante.length === 0) {
+        console.log('Keine Einheiten zum Anzeigen, breche Tab-Erstellung ab.'); // Debug-Ausgabe
         return;
     }
 
-    // === BEGINN DER KORREKTUR ===
-    // Wir nehmen die Einheit_ID der ERSTEN Einheit als repräsentativ für die gesamte Variante.
-    // Dies ist die ID, die für den Re-Audit-Button und als Fallback für den QA-Tab verwendet wird.
-    const representativeEinheitID = einheitenFuerVariante[0].Einheit_ID;
+    const representativeEinheitIDForQA = einheitenFuerVariante[0].Einheit_ID.split('__v_')[0];
+    console.log(`Repräsentative ID für QA-Tab gesetzt: '${representativeEinheitIDForQA}'`); // Debug-Ausgabe
 
     if (qaTabButton) {
         qaTabButton.style.display = 'inline-block';
-        
-        // Der onclick-Handler wird jetzt so gesetzt, dass er IMMER die ID der repräsentativen Einheit verwendet.
         qaTabButton.onclick = () => {
              document.querySelectorAll('.tab-navigation .tab-link').forEach(item => item.classList.remove('active'));
              document.querySelectorAll('.tab-content-area .tab-content').forEach(content => content.classList.remove('active'));
              qaTabButton.classList.add('active');
-
              const qaContentArea = document.getElementById('tab-qa');
              if (qaContentArea) qaContentArea.classList.add('active');
-
              if (typeof fetchAndDisplayAudits === "function") {
-                // Wir verwenden hier die repräsentative ID.
-                fetchAndDisplayAudits(representativeEinheitID, 'tab-qa');
+                fetchAndDisplayAudits(representativeEinheitIDForQA, 'tab-qa');
              }
         };
     }
-    // === ENDE DER KORREKTUR ===
 
+    einheitenFuerVariante.sort((a, b) => (a.Absatz || "").localeCompare(b.Absatz || "", undefined, {numeric: true}) || (a.Satz || "").localeCompare(b.Satz || "", undefined, {numeric: true}));
 
-    // Schleife, um die einzelnen Absatz-Tabs zu erstellen
-    einheitenFuerVariante.sort((a, b) => (parseInt(a.Absatz, 10) || 0) - (parseInt(b.Absatz, 10) || 0) || (parseInt(a.Satz, 10) || 0) - (parseInt(b.Satz, 10) || 0));
-
+    let firstAbsatzTabId = null;
     einheitenFuerVariante.forEach((einheit, index) => {
+        const spezifischeEinheitId = einheit.Einheit_ID;
+        const tabContentId = `tab-content-${spezifischeEinheitId.replace(/[^a-zA-Z0-9-_]/g, '')}`;
+        
+        if (index === 0) firstAbsatzTabId = tabContentId;
+
         const newTabButton = document.createElement('button');
         newTabButton.classList.add('tab-link');
-        
-        // HIER WIRD DIE VOLLE, SPEZIFISCHE ID FÜR JEDEN TAB VERWENDET
-        const spezifischeEinheitId = einheit.Einheit_ID;
-
-        const invalidCharsRegex = new RegExp('[^a-zA-Z0-9-_]', 'g');
-        const cleanEinheitId = spezifischeEinheitId.replace(invalidCharsRegex, '');
-        const tabContentId = `tab-content-${cleanEinheitId}`;
-        
         newTabButton.setAttribute('data-tab', tabContentId);
         newTabButton.setAttribute('data-einheit-id', spezifischeEinheitId);
+        
         let tabLabel = `Abs. ${einheit.Absatz || '?'}`;
         if (einheit.Satz && String(einheit.Satz).trim() !== "") tabLabel += ` S. ${einheit.Satz}`;
-        if (einheit.Kurzbeschreibung) newTabButton.title = einheit.Kurzbeschreibung;
+        newTabButton.title = einheit.Kurzbeschreibung || tabLabel;
         newTabButton.textContent = tabLabel;
-
-        if (index === 0) firstAbsatzTabId = tabContentId;
 
         newTabButton.addEventListener('click', () => {
             document.querySelectorAll('.tab-navigation .tab-link').forEach(item => item.classList.remove('active'));
@@ -238,8 +254,10 @@ function createAbsatzTabsForVariant(einheitenFuerVariante, tabNavigation) {
             newTabButton.classList.add('active');
             const activeContentArea = ensureTabContentAreaExists(tabContentId);
             activeContentArea.classList.add('active');
-            // Hier wird die korrekte, spezifische ID an die Ladefunktion übergeben
-            if (typeof loadAndDisplayAbsatzData === "function") loadAndDisplayAbsatzData(spezifischeEinheitId, tabContentId);
+            
+            if (typeof loadAndDisplayAbsatzData === "function") {
+                loadAndDisplayAbsatzData(spezifischeEinheitId, tabContentId);
+            }
         });
 
         if (resultTabButton) tabNavigation.insertBefore(newTabButton, resultTabButton);
@@ -250,7 +268,10 @@ function createAbsatzTabsForVariant(einheitenFuerVariante, tabNavigation) {
     
     if (firstAbsatzTabId) {
         const firstNewTabButton = tabNavigation.querySelector(`.tab-link[data-tab="${firstAbsatzTabId}"]`);
-        if (firstNewTabButton) firstNewTabButton.click();
+        if (firstNewTabButton) {
+            console.log('Aktiviere ersten Tab der neuen Variante.'); // Debug-Ausgabe
+            firstNewTabButton.click();
+        }
     }
 }
 
@@ -769,4 +790,206 @@ function uiRenderAuditData(audits, tabId, einheitId) {
     }
     
     renderSelectedAudit(audits[0]);
+}
+
+// In simona-ui.js am Ende der Datei einfügen (ersetzt den vorherigen Block)
+
+/**
+ * Rendert die komplette Audit-Ansicht.
+ * @param {Array|null} audits - Das Array der Audit-Objekte.
+ * @param {string} targetElementId - Die ID des Ziel-Containers.
+ * @param {string} einheitIdBasis - Die Basis-ID der Norm.
+ * @param {boolean} isLoading - Zeigt an, ob der Ladezustand gerendert werden soll.
+ * @param {string|null} errorMessage - Eine optionale Fehlermeldung.
+ */
+function uiRenderAuditData(audits, targetElementId, einheitIdBasis, isLoading, errorMessage = null) {
+    const container = document.getElementById(targetElementId);
+    if (!container) return;
+
+    container.innerHTML = '<h2>Qualitätssicherung & Audit-Vergleich</h2>';
+
+    if (isLoading) {
+        container.innerHTML += '<div class="simona-thinking-indicator"><div class="thinking-orb"></div><p>Lade Qualitäts-Audits...</p></div>';
+        return;
+    }
+    
+    if (errorMessage) {
+        container.innerHTML += `<p style="color:red;">Fehler: ${errorMessage}</p>`;
+        return;
+    }
+
+    if (!audits || !Array.isArray(audits) || audits.length === 0) {
+        container.innerHTML += '<p>Für diese Norm(teile) wurden noch keine Qualitäts-Audits erstellt.</p>';
+        return;
+    }
+
+    const selectLabel = document.createElement('label');
+    selectLabel.setAttribute('for', 'audit-version-selector');
+    selectLabel.textContent = 'Verfügbare Audit-Version auswählen:';
+    container.appendChild(selectLabel);
+
+    const select = document.createElement('select');
+    select.id = 'audit-version-selector';
+    select.classList.add('dropdown-element');
+    container.appendChild(select);
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '-- Bitte Audit wählen --';
+    select.appendChild(defaultOption);
+
+    audits.forEach(audit => {
+        const option = document.createElement('option');
+        option.value = audit.AuditID;
+        option.textContent = createAuditDisplayName(audit);
+        select.appendChild(option);
+    });
+
+    const auditContentArea = document.createElement('div');
+    auditContentArea.id = 'audit-detail-content';
+    auditContentArea.style.marginTop = '20px';
+    container.appendChild(auditContentArea);
+
+    // KORRIGIERTER EVENT-LISTENER
+    select.addEventListener('change', (event) => {
+        console.group("Audit-Auswahl geändert");
+        const selectedAuditId = event.target.value;
+        console.log("Ausgewählte Audit-ID:", selectedAuditId);
+
+        if (!selectedAuditId) {
+            displayAuditDetails(null, auditContentArea); // Leert die Anzeige
+            console.log("Keine Auswahl, Anzeige geleert.");
+            console.groupEnd();
+            return;
+        }
+
+        // Suche das passende Audit-Objekt im 'audits'-Array
+        const selectedAudit = audits.find(a => String(a.AuditID) === String(selectedAuditId));
+
+        console.log("Gefundenes Audit-Objekt:", selectedAudit); // WICHTIGES DEBUGGING
+        displayAuditDetails(selectedAudit, auditContentArea);
+        console.groupEnd();
+    });
+}
+
+
+/**
+ * Erzeugt einen lesbaren Namen für eine Audit-Auswahloption. (Unverändert)
+ */
+function createAuditDisplayName(audit) {
+    if (!audit) return 'Unbekanntes Audit';
+
+    let displayParts = [];
+
+    // 1. Nutze die sauberen Felder aus der Datenbank
+    const normTeil = `${audit.Absatz ? 'Abs. ' + audit.Absatz : ''} ${audit.Satz ? 'S. ' + audit.Satz : ''}`.trim();
+    if (normTeil) {
+        displayParts.push(normTeil);
+    }
+    
+    // Extrahiere Variante aus der ID (dies bleibt поки)
+    const varianteMatch = audit.FK_Einheit_ID.match(/__v_([^_]+)/);
+    const variante = varianteMatch ? varianteMatch[1] : 'Standard';
+    displayParts.push(variante);
+    
+    // Nutze die saubere Prompt-Version aus der DB
+    if (audit.Prompt_Version) {
+        displayParts.push(`Prompt-Version: ${audit.Prompt_Version}`);
+    }
+
+    // 2. Formatiere den Score
+    const scoreText = (audit.Gesamtscore !== null && audit.Gesamtscore !== undefined)
+        ? `(Score: ${parseFloat(audit.Gesamtscore).toFixed(1)}/10)`
+        : '(Kein Score)';
+    displayParts.push(scoreText);
+
+    // 3. Formatiere das Datum
+    const timestamp = new Date(audit.Audit_Timestamp).toLocaleString('de-DE', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    displayParts.push(`- [${timestamp} Uhr]`);
+
+    // 4. Baue den finalen String zusammen
+    return displayParts.join('   ');
+}
+
+
+/**
+ * Zeigt die Details eines ausgewählten Audits an. (Unverändert)
+ */
+function getScoreColor(score) {
+    if (score === null || score === undefined) {
+        return { backgroundColor: '#6c757d', color: 'white' }; // Grau für keinen Score
+    }
+
+    const s = parseFloat(score);
+    // Farbverlauf von Rot (0) über Gelb (5) zu Grün (10)
+    const red = Math.min(255, 255 - (s * 25.5));
+    const green = Math.min(255, s * 25.5);
+
+    const backgroundColor = `rgb(${red}, ${green}, 70)`;
+
+    // Textfarbe basierend auf der Helligkeit der Hintergrundfarbe bestimmen
+    // Formel zur Helligkeitsberechnung
+    const brightness = (red * 299 + green * 587 + 70 * 114) / 1000;
+    const textColor = brightness > 125 ? 'black' : 'white';
+
+    return { backgroundColor, color: textColor };
+}
+
+
+/**
+ * VERBESSERTE VERSION
+ * Zeigt die Details eines ausgewählten Audits an, inklusive des neuen farbigen Score-Badges.
+ */
+function displayAuditDetails(audit, container) {
+    if (!audit) {
+        container.innerHTML = '';
+        return;
+    }
+
+    let responseJson = {};
+    try {
+        if (audit.P5_Response_JSON) responseJson = JSON.parse(audit.P5_Response_JSON);
+    } catch (e) {
+        console.error("Fehler beim Parsen des Audit-JSON:", e);
+        container.innerHTML = "<p style='color:red;'>Fehler: Das gespeicherte Audit-Format ist ungültig.</p>";
+        return;
+    }
+    
+    const gesamtbewertung = responseJson.Gesamtbewertung || {};
+    const detailbewertungen = responseJson.Detailbewertungen || [];
+    
+    // --- HIER FINDET DIE ÄNDERUNG STATT ---
+    
+    // 1. Hole die Farben für den Score
+    const scoreValue = gesamtbewertung.Score;
+    const { backgroundColor, color } = getScoreColor(scoreValue);
+    
+    // 2. Erstelle den Score-Text und das Badge
+    const scoreText = scoreValue ? `${parseFloat(scoreValue).toFixed(1)} / 10.0` : 'N/A';
+    const scoreBadgeHTML = `<div class="score-badge" style="background-color: ${backgroundColor}; color: ${color};">${scoreText}</div>`;
+
+    // 3. Baue das finale HTML zusammen
+    let html = `
+        <div class="panel-section" style="border-left: 4px solid #007bff;">
+            <h3>Gesamtbewertung (Audit-ID: ${audit.AuditID})</h3>
+            <h4>Zugeordnete Einheit: <span style="font-weight:normal;">${audit.FK_Einheit_ID}</span></h4>
+            ${scoreBadgeHTML}
+            <p style="margin-top: 15px;"><strong>Fazit:</strong> ${gesamtbewertung.Fazit || 'Kein Fazit vorhanden.'}</p>
+        </div>
+    `;
+
+    // Der Rest der Funktion bleibt gleich
+    detailbewertungen.forEach(detail => {
+        const detailScoreColor = getScoreColor(detail.Score);
+        html += `
+            <div class="panel-section" style="margin-top: 15px;">
+                <h4>${detail.Kategorie || 'Unbenannte Kategorie'} <span style="font-weight:bold; color: ${detailScoreColor.backgroundColor};">(${detail.Score}/10)</span></h4>
+                <p>${detail.Begruendung || ''}</p>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
 }
